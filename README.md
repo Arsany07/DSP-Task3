@@ -1,3 +1,60 @@
 # DSP-Task3
+
 A Multiuse Equalizer
-# ENGEDNA YA RAB! YA RAB ANA T3EEEEBT!
+
+## Object Names
+
+### Plot names
+
+#### Input Signal Plots
+
+* plot_input_sig_time
+* plot_input_sig_freq
+* plot_input_sig_spect
+
+#### Output Signal Plots
+
+* plot_output_sig_time
+* plot_output_sig_freq
+* plot_output_sig_spect
+  
+###### Multiplication window plot: *plot_multWindow*
+
+#### Playback Buttons
+
+* btn_play
+* btn_rewind
+* btn_zoom_in
+* btn_zoom_out
+* btn_pan_left
+* btn_pan_right
+===
+
+#### Widget names (For hiding and stuff)
+
+* *wgt_sliders*: parent of *wgt_sld_1* till *wgt_sld_10*
+* *wgt_multWindow_std* & *wgt_multWindow_amp*
+
+#### Labels that need editing through code
+
+* label_speed: should display "x {slider value divided by 10}" up to one float position
+* Slider labels are named label_slider1 to label_slider10
+* lbl_value_amp: for the Amplitude slider in multiplication window
+* lbl_value_std: for the STD Slider in multiplication window
+
+#### Things that should be set at app runtime
+
+* Text of speed slider (label_speed)
+* Hiding the standard deviation widget so it only show when gaussian multiplication window is selected
+  (Use: ```wgt_multWindow_std.setVisible(False)``` )
+
+###### All Group boxes are named *grpbx_*
+###### All Combo boxes are named *cmbx_*
+###### Sliders are named *slider1* till *slider10*, each slider is inside its own widget (idk why I did that)
+
+
+# TODO for UI
+
+###### Add checkboxes to hide/unhide spectrographs
+
+###### Consider making just one big GraphicsLayoutWidget and Adding multiple plots to it instead of having three plot widgets for input and output
