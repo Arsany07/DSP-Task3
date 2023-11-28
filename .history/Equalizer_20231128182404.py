@@ -1,7 +1,6 @@
 import sys
 from PyQt5.QtWidgets import QWidget, QApplication, QMainWindow, QFileDialog
 from gui import Ui_MainWindow
-<<<<<<< HEAD
 from cProfile import label
 from matplotlib.pyplot import xlabel
 from gui import Ui_MainWindow
@@ -23,8 +22,6 @@ import pyqtgraph as pg
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 from PyQt5.QtCore import QUrl
 
-=======
->>>>>>> parent of 2b377cf (added functionality to save button)
 
 class EqualizerGUI(Ui_MainWindow):
     def setupUi(self, MainWindow):
@@ -36,7 +33,6 @@ class Equalizer(QMainWindow):
         super(Equalizer, self).__init__()
         self.gui = EqualizerGUI()
         self.gui.setupUi(self)
-<<<<<<< HEAD
 
         self.data = []
         self.data_fft = None
@@ -274,12 +270,6 @@ class Equalizer(QMainWindow):
         return modified_data
 
 
-=======
-        
-    def func_1(self):
-        pass # Replace this with your function
-        
->>>>>>> parent of 2b377cf (added functionality to save button)
 # Run Application
 app = QApplication(sys.argv)
 win = Equalizer()
