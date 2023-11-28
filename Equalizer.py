@@ -70,16 +70,6 @@ class Equalizer(QMainWindow):
         self.gui.actionOpen.triggered.connect(self.open_wav_file)
         self.gui.actionSave.triggered.connect(self.save_wav_file)
 
-
-
-        
-    def open_wav_file(self):
-        files_name = QFileDialog.getOpenFileName(self, 'Open WAV File', os.getenv('HOME'), "WAV files (*.wav)")
-        path = files_name[0]
-        if path:
-            sample_rate, signal = wavfile.read(path)
-            # Store the data for later use
-
         
         # Create a QMediaPlayer instance for playing audio
         self.media_player = QMediaPlayer()
@@ -92,6 +82,36 @@ class Equalizer(QMainWindow):
 
         self.gui.btn_pan_left.clicked.connect(self.seek_backward)
         self.gui.btn_pan_right.clicked.connect(self.seek_forward)
+
+
+
+        
+    def open_wav_file(self):
+        try:
+            files_name = QFileDialog.getOpenFileName(self, 'Open WAV File', os.getenv('HOME'), "WAV files (*.wav)")
+            path = files_name[0]
+            if path:
+                # Store the data for later use
+                sample_rate, signal = wavfile.read(path)
+                self.data = signal
+                self.sample_rate = sample_rate
+                self.data_fft = np.fft.fft(signal)
+    
+                self.data_modified = self.data    
+                self.data_modified_fft = self.data_fft
+    
+    
+                frequencies = np.fft.fftfreq(len(signal), 1 / sample_rate)
+                self.section_width = len(frequencies) // 10
+                for i in range(10):
+                    start_idx = i * self.section_width
+                    end_idx = (i + 1) * self.section_width
+                    self.data_ranges[i] = [start_idx, end_idx]
+                self.plot_on_main(self.data, self.data_fft)
+                self.plot_on_secondary(self.data_modified, self.data_modified_fft)
+
+        except Exception as e:
+            print(f"Error: {e}")
 
     
     def seek_forward(self):
