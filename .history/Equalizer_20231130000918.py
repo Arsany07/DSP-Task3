@@ -48,13 +48,9 @@ class Equalizer(QMainWindow):
             self.gui.slider1, self.gui.slider2, self.gui.slider3, self.gui.slider4, self.gui.slider5,
             self.gui.slider6, self.gui.slider7, self.gui.slider8, self.gui.slider9, self.gui.slider10
         ]
-        
         self.slider_wgts = [ self.gui.wgt_sld_1, self.gui.wgt_sld_2, self.gui.wgt_sld_3, self.gui.wgt_sld_4,
                             self.gui.wgt_sld_5, self.gui.wgt_sld_6, self.gui.wgt_sld_7, self.gui.wgt_sld_8,
                             self.gui.wgt_sld_9, self.gui.wgt_sld_10]
-        
-        self.views = [self.gui.plot_input_sig_freq, self.gui.plot_input_sig_time, self.gui.plot_input_sig_spect, self.gui.plot_output_sig_freq,
-                      self.gui.plot_output_sig_time, self.gui.plot_output_sig_spect]
         for i in range(10):
             self.connect_sliders(i)
         self.gui.actionOpen.triggered.connect(self.open_wav_file)
@@ -99,7 +95,6 @@ class Equalizer(QMainWindow):
         self.hide_input_spectrogram()
         self.hide_output_spectrogram()
         self.link_views()
-        self.apply_optimizations_to_views()
 
     #=============================== Function Definitions ===============================#
     
@@ -112,12 +107,9 @@ class Equalizer(QMainWindow):
         self.gui.plot_input_sig_spect.setYLink(self.gui.plot_output_sig_spect)
         self.gui.plot_input_sig_freq.setXLink(self.gui.plot_output_sig_freq)
         self.gui.plot_input_sig_freq.setYLink(self.gui.plot_output_sig_freq)
-
     
     def apply_optimizations_to_views(self):
-        for view in self.views:
-            view.getPlotItem().setDownsampling(auto=True, ds = 1, mode = 'subsample')
-            view.getPlotItem().setClipToView(True)
+        for view in self.gui.Main
 
         
     #TODO - CHANGE INTO ONE FUNCTION TO AVOID REPITITION

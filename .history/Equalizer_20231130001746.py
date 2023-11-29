@@ -116,8 +116,8 @@ class Equalizer(QMainWindow):
     
     def apply_optimizations_to_views(self):
         for view in self.views:
-            view.getPlotItem().setDownsampling(auto=True, ds = 1, mode = 'subsample')
-            view.getPlotItem().setClipToView(True)
+            view.getPlotItem.setDownsampling(auto=False, ds = 2, mode = 'mean')
+            view.getPlotItem.setClipToView(True)
 
         
     #TODO - CHANGE INTO ONE FUNCTION TO AVOID REPITITION

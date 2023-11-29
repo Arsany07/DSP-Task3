@@ -48,13 +48,6 @@ class Equalizer(QMainWindow):
             self.gui.slider1, self.gui.slider2, self.gui.slider3, self.gui.slider4, self.gui.slider5,
             self.gui.slider6, self.gui.slider7, self.gui.slider8, self.gui.slider9, self.gui.slider10
         ]
-        
-        self.slider_wgts = [ self.gui.wgt_sld_1, self.gui.wgt_sld_2, self.gui.wgt_sld_3, self.gui.wgt_sld_4,
-                            self.gui.wgt_sld_5, self.gui.wgt_sld_6, self.gui.wgt_sld_7, self.gui.wgt_sld_8,
-                            self.gui.wgt_sld_9, self.gui.wgt_sld_10]
-        
-        self.views = [self.gui.plot_input_sig_freq, self.gui.plot_input_sig_time, self.gui.plot_input_sig_spect, self.gui.plot_output_sig_freq,
-                      self.gui.plot_output_sig_time, self.gui.plot_output_sig_spect]
         for i in range(10):
             self.connect_sliders(i)
         self.gui.actionOpen.triggered.connect(self.open_wav_file)
@@ -85,10 +78,10 @@ class Equalizer(QMainWindow):
 
         # Connect checkboxes to show/hide spectrograms
         self.gui.chkbx_spect_input.stateChanged.connect(self.hide_input_spectrogram)
-        self.gui.chkbx_spect_output.stateChanged.connect(self.hide_output_spectrogram)
+        self.gui.chkbx_spect_output.stateChanged.connect(self.hide_input_spectrogram)
             
         # Connect Combo boxes
-        self.gui.cmbx_mode_selection.currentIndexChanged.connect(self.switch_modes)
+        self.gui.cmbx_mode_selection.currentTextChanged(self.switch_modes)
         self.gui.cmbx_multWindow.currentIndexChanged.connect(self.update_window)
 
 
@@ -97,98 +90,49 @@ class Equalizer(QMainWindow):
         
         # Window setup at first launch
         self.hide_input_spectrogram()
-        self.hide_output_spectrogram()
-        self.link_views()
-        self.apply_optimizations_to_views()
 
-    #=============================== Function Definitions ===============================#
-    
-    
-    # Links Views
-    def link_views(self):
-        self.gui.plot_input_sig_time.setXLink(self.gui.plot_output_sig_time)
-        self.gui.plot_input_sig_time.setYLink(self.gui.plot_output_sig_time)
-        self.gui.plot_input_sig_spect.setXLink(self.gui.plot_output_sig_spect)
-        self.gui.plot_input_sig_spect.setYLink(self.gui.plot_output_sig_spect)
-        self.gui.plot_input_sig_freq.setXLink(self.gui.plot_output_sig_freq)
-        self.gui.plot_input_sig_freq.setYLink(self.gui.plot_output_sig_freq)
-
-    
-    def apply_optimizations_to_views(self):
-        for view in self.views:
-            view.getPlotItem().setDownsampling(auto=True, ds = 1, mode = 'subsample')
-            view.getPlotItem().setClipToView(True)
-
-        
-    #TODO - CHANGE INTO ONE FUNCTION TO AVOID REPITITION
+#TODO - CHANGE INTO ONE FUNCTION TO AVOID REPITITION
 
     # "Mode Changing" methods
     def change_mode_uniform(self):
-        
-        print ("Uniform mode")
-        
-        for slider in self.slider_wgts[4:10]:
+        for slider in self.sliders[4:9]:
             slider.setVisible(True)
-        for i, widget in enumerate(self.slider_wgts):
-            widget.findChild(QtWidgets.QLabel).setText(f"Slider {i+1}")
             
     def change_mode_instruments(self):
-        
-        print ("Instrument Mode")
-        
-        for slider in self.slider_wgts[4:10]:
+        for slider in self.sliders[4:9]:
             slider.setVisible(False)
-        for i, widget in enumerate(self.slider_wgts):
-            widget.findChild(QtWidgets.QLabel).setText(f"Instrument {i+1}")
-        # for i, label in enumerate(self.gui.slider_wgts.findChildren(QtWidgets.QLabel)):
-        #     label.setText(f"Instrument {i}")
-
-                
+        for i, label in enumerate(self.gui.wgt_sliders.findChildren(QtWidgets.QLabel)):
+            label.setText(f"Instrument {i}")
         
     def change_mode_animals(self):
-        
-        print ("Animal Mode")
-
-        for slider in self.slider_wgts[4:10]:
+        for slider in self.sliders[4:9]:
             slider.setVisible(False)
-            
-        for i, widget in enumerate(self.slider_wgts):
-            widget.findChild(QtWidgets.QLabel).setText(f"Animal {i+1}")
-        
-        # for slider in self.sliders[4:9]:
-        #     slider.setVisible(False)
-        # for i, label in enumerate(self.gui.wgt_sliders.findChildren(QtWidgets.QLabel)):
-        #     label.setText(f"animal {i}")
+        for i, label in enumerate(self.gui.wgt_sliders.findChildren(QtWidgets.QLabel)):
+            label.setText(f"animal {i}")
     
     def change_mode_ECG(self):
-        print ("ECG Mode")
-        for slider in self.slider_wgts[3:10]:
-            slider.setVisible(False)
-            
-        for i, widget in enumerate(self.slider_wgts):
-            widget.findChild(QtWidgets.QLabel).setText(f"Arrythmia {i+1}")
+        # INSERT ECG MODE CODE HERE
         pass
     
     def switch_modes(self):
         mode = self.gui.cmbx_mode_selection.currentText()
-        print(mode)
         
         match mode:
             
             case "Uniform Range Mode":
-                self.change_mode_uniform()
+                self.change_mode_uniform
                 
-            case "Musical Instruments Mode":
-                self.change_mode_instruments()
+            case "Musical Instruemnts Mode":
+                self.change_mode_instruments
                 
             case "Animal Sounds Mode":
-                self.change_mode_animals()
+                self.change_mode_animals
                 
             case "ECG Abnormalities Mode":
-                self.change_mode_ECG()
+                self.change_mode_ECG
                 
             case _:
-                print ("Default Case")
+                self.change_mode_uniform
             
 
     
@@ -349,7 +293,7 @@ class Equalizer(QMainWindow):
 
         self.gui.plot_input_sig_time.plot(np.linalg.norm(data, axis=1), pen="r")
         self.gui.plot_input_sig_freq.plot(np.abs(freq), pen="r")
-        print(np.abs(freq))
+
 
     def plot_on_secondary(self, data, freq):
         self.gui.plot_output_sig_time.clear()
