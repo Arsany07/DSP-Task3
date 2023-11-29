@@ -169,11 +169,18 @@ class Equalizer(QMainWindow):
             files_name = QFileDialog.getOpenFileName(self, 'Open WAV File', os.getenv('HOME'), "WAV files (*.wav)")
             self.path = files_name[0]
             if self.path:
+
+               
                 sample_rate, signal = wavfile.read(self.path)
                 self.data = signal
                 self.sample_rate = sample_rate
                 self.data_fft = np.fft.fft(signal)
                 self.frequencies = np.fft.fftfreq(len(signal), d=1 / sample_rate)
+
+                # _, freqs = librosa.load(self.path, sr=None)
+                # freq_max = freqs / 2
+                # freqs = np.linspace(0, freq_max, signal.size)
+                # self.frequencies = freqs
 
 
                 self.data_modified = self.data    

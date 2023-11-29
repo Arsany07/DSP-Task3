@@ -27,6 +27,8 @@ class Equalizer(QMainWindow):
         self.data_fft = None
         self.data_modified = []
         self.data_modified_fft = None
+        self.frequencies = None
+        self.data_modified_frequencies = None
         self.sample_rate = None
         self.data_ranges = []
         self.mult_window = "rectangle"
@@ -171,52 +173,50 @@ class Equalizer(QMainWindow):
                 self.data = signal
                 self.sample_rate = sample_rate
                 self.data_fft = np.fft.fft(signal)
+                self.frequencies = np.fft.fftfreq(len(signal), 1 / sample_rate)
 
                 self.data_modified = self.data    
                 self.data_modified_fft = self.data_fft
+                self.data_modified_frequencies = self.frequencies
 
-
-                frequencies = np.fft.fftfreq(len(signal), 1 / sample_rate)
-                self.section_width = len(frequencies) // 10
+                self.section_width = len(self.frequencies) // 10
                 for i in range(10):
                     start_idx = i * self.section_width
                     end_idx = (i + 1) * self.section_width
                     self.data_ranges[i] = [start_idx, end_idx]
-                self.plot_on_main(self.data, self.data_fft)
-                self.plot_on_secondary(self.data_modified, self.data_modified_fft)
+                self.plot_on_main(self.data, self.frequencies)
+                self.plot_on_secondary(self.data_modified, self.data_modified_frequencies)
 
                 self.plot_spectrogram_main()
                 self.plot_spectrogram_secondary()
 
         except Exception as e:
             print(f"Error: {e}")
-    
-    # ... Your other class methods ...
 
-    def plot_spectrogram(self, ax, data, sample_rate, title, label_plot):
-        label_plot = pg.PlotWidget()
-        label_plot.setLabel('left', 'Frequency', units='Hz')
-        label_plot.setLabel('bottom', 'Time', units='s')
+
+    def plot_spectrogram(self, ax, data, sample_rate, title):
         # Compute Spectrogram
         f, t, sxx = spectrogram(data, fs=sample_rate)
 
         # Plot Spectrogram
         img = pg.ImageItem()
         img.setImage(np.log(sxx + 1))
-        label_plot.addItem(img)
+        ax.addItem(img)
 
-        # Set colormap
+        # Set labels and colormap
+        ax.setLabel('left', 'Frequency', units='Hz')
+        ax.setLabel('bottom', 'Time', units='s')
         colormap = pg.colormap.get('viridis')
         img.setColorMap(colormap)
-        # self.show()
+        ax.setTitle(title)
 
 
 
     def plot_spectrogram_main(self):
-        self.plot_spectrogram(self.gui.plot_input_sig_spect, self.data, self.sample_rate, "Input Spectrogram", self.gui.plot_input_sig_spect)
+        self.plot_spectrogram(self.gui.plot_input_sig_spect, self.data, self.sample_rate, "Input Spectrogram")
 
     def plot_spectrogram_secondary(self):
-        self.plot_spectrogram(self.gui.plot_output_sig_spect, self.data_modified, self.sample_rate, "Output Spectrogram", self.gui.plot_output_sig_spect)
+        self.plot_spectrogram(self.gui.plot_output_sig_spect, self.data_modified, self.sample_rate, "Output Spectrogram")
 
 
 
@@ -228,7 +228,7 @@ class Equalizer(QMainWindow):
         self.gui.plot_input_sig_freq.clear()
 
         self.gui.plot_input_sig_time.plot(np.linalg.norm(data, axis=1), pen="r")
-        self.gui.plot_input_sig_freq.plot(np.linalg.norm(freq, axis=1), pen="r")
+        self.gui.plot_input_sig_freq.plot(np.abs(freq), pen="r")
 
 
     def plot_on_secondary(self, data, freq):
@@ -236,21 +236,21 @@ class Equalizer(QMainWindow):
         self.gui.plot_output_sig_freq.clear()
 
         self.gui.plot_output_sig_time.plot(np.linalg.norm(data, axis=1), pen="r")
-        self.gui.plot_output_sig_freq.plot(np.linalg.norm(freq, axis=1), pen="r")
+        self.gui.plot_output_sig_freq.plot(np.abs(freq), pen="r")
 
     def set_bands_gains_sliders(self):
         for i in range(10):
-            self.sliders[i].setMinimum(1)
-            self.sliders[i].setMaximum(2)
-            self.sliders[i].setValue(1)
-            self.sliders[i].setTickInterval(0.1)
+            self.sliders[i].setMinimum(-30)
+            self.sliders[i].setMaximum(30)
+            self.sliders[i].setValue(0)
+            self.sliders[i].setTickInterval(1)
 
     def connect_sliders(self, index):
         self.sliders[index].valueChanged.connect(lambda: self.mult_freqs(index))
 
     def mult_freqs(self, index):
-        self.data_modified_fft = self.multiply_fft(
-            self.data_modified_fft,
+        self.data_modified_frequencies = self.multiply_fft(
+            self.data_modified_frequencies,
             self.data_ranges[index][0],
             self.data_ranges[index][1],
             10**(self.sliders[index].value()/20),
@@ -262,26 +262,26 @@ class Equalizer(QMainWindow):
         self.data_modified = self.data_modified.real.astype(np.int64)  # Real part only
 
         
-        self.plot_on_secondary(self.data_modified, self.data_modified_fft)
+        self.plot_on_secondary(self.data_modified, self.data_modified_frequencies)
         self.plot_spectrogram_secondary()
 
     def multiply_fft(self, data, start, end, index, std_gaussian, mult_window):
         modified_data = data.copy()
 
         if mult_window == "rectangle":
-            modified_data[start:end] = self.data_fft[start:end] * index
+            modified_data[start:end] = self.frequencies[start:end] * index
 
         elif mult_window == "hamming":
             hamming_window = np.hamming(end - start)[:, np.newaxis] * index
-            modified_data[start:end] = self.data_fft[start:end] * hamming_window
+            modified_data[start:end] = self.frequencies[start:end] * hamming_window
 
         elif mult_window == "hanning":
             hanning_window = np.hanning(end - start)[:, np.newaxis] * index
-            modified_data[start:end] = self.data_fft[start:end] * hanning_window
+            modified_data[start:end] = self.frequencies[start:end] * hanning_window
 
         elif mult_window == "gaussian":
             gaussian_window = np.exp(-0.5 * ((np.arange(end - start) - (end - start) / 2) / std_gaussian) ** 2)[:, np.newaxis] * index
-            modified_data[start:end] = self.data_fft[start:end] * gaussian_window
+            modified_data[start:end] = self.frequencies[start:end] * gaussian_window
 
         return modified_data
 
