@@ -1,26 +1,15 @@
 import sys
 from PyQt5.QtWidgets import QWidget, QApplication, QMainWindow, QFileDialog
 from gui import Ui_MainWindow
-from cProfile import label
-from matplotlib.pyplot import xlabel
-from gui import Ui_MainWindow
-import os
-import math
-from scipy.fftpack import fft, fftfreq
-import pandas as pd
-from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QApplication, QFileDialog
-import numpy as np
-from scipy.io import wavfile
-import matplotlib.pyplot as plt
-from scipy.fftpack import fft, fftfreq
-import pyqtgraph as pg
 import os
 from scipy.io import wavfile
+from scipy.signal import spectrogram
 import numpy as np
 import pyqtgraph as pg
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 from PyQt5.QtCore import QUrl
+from pydub import AudioSegment
+import matplotlib.pyplot as plt
 
 
 class EqualizerGUI(Ui_MainWindow):
@@ -36,16 +25,6 @@ class Equalizer(QMainWindow):
 
         self.data = []
         self.data_fft = None
-
-        self.data_modified = []
-        self.data_modified_fft = None
-
-        self.sample_rate = None
-        self.data_ranges = []
-
-        self.mult_window = "rectangle"
-        self.section_width = None
-
         self.data_modified = []
         self.data_modified_fft = None
         self.sample_rate = None
@@ -55,9 +34,10 @@ class Equalizer(QMainWindow):
 
         self.path = None
 
-        self.media_player_status = 0
-        self.current_position = 0
+        self.std = 10
 
+        self.current_position = 0
+        self.media_player_status = 0
 
         self.data_ranges = [None] * 10
 
@@ -71,80 +51,91 @@ class Equalizer(QMainWindow):
         self.gui.actionSave.triggered.connect(self.save_wav_file)
 
 
-
-        
-    def open_wav_file(self):
-        files_name = QFileDialog.getOpenFileName(self, 'Open WAV File', os.getenv('HOME'), "WAV files (*.wav)")
-        path = files_name[0]
-        if path:
-            sample_rate, signal = wavfile.read(path)
-            # Store the data for later use
-
-        
         # Create a QMediaPlayer instance for playing audio
         self.media_player = QMediaPlayer()
         self.media_player.stateChanged.connect(self.on_media_state_changed)
-
         # Connect the button click event to the play_file method
-        self.gui.btn_play.clicked.connect(self.play_file)
+        self.gui.btn_play.clicked.connect(lambda: self.play_file(self.media_player, path=self.path))
+        self.gui.btn_rewind.clicked.connect(lambda: self.restart_file(self.media_player, path=self.path))
+        self.gui.btn_pan_left.clicked.connect(lambda: self.seek_backward(self.media_player))
+        self.gui.btn_pan_right.clicked.connect(lambda: self.seek_forward(self.media_player))
 
-        self.gui.btn_rewind.clicked.connect(self.restart_file)
 
-        self.gui.btn_pan_left.clicked.connect(self.seek_backward)
-        self.gui.btn_pan_right.clicked.connect(self.seek_forward)
+        self.media_player_output = QMediaPlayer()
+        self.media_player_output.stateChanged.connect(self.on_media_state_changed_output)
+        # Connect the button click event to the play_file method
+        self.gui.btn_play_output.clicked.connect(lambda: self.play_file(self.media_player_output, path="output.wav"))
+        self.gui.btn_rewind_output.clicked.connect(lambda: self.restart_file(self.media_player_output, path="output.wav"))
+        self.gui.btn_pan_left_output.clicked.connect(lambda: self.seek_backward(self.media_player_output))
+        self.gui.btn_pan_right_output.clicked.connect(lambda: self.seek_forward(self.media_player_output))
+
+
+        
+        self.gui.cmbx_multWindow.currentIndexChanged.connect(self.update_window)
+
+
+        self.gui.slider_amplitude_2.valueChanged.connect(self.set_std)
+        self.gui.slider_amplitude_2.setEnabled(False)
+
+
+    def set_std(self):
+        self.std = self.gui.slider_amplitude_2.value()
+        self.gui.lbl_value_amp_3.setText(str(self.gui.slider_amplitude_2.value()))
+
+    def update_window(self, index):
+        # Get the selected item from the combo box
+        selected_item = self.gui.cmbx_multWindow.currentText()
+        self.gui.slider_amplitude_2.setEnabled(False)
+
+        if selected_item == "Rectangle":
+            self.mult_window = "rectangle"
+
+        elif selected_item == "Hamming":
+            self.mult_window = "hamming"
+
+        elif selected_item == "Hanning":
+            self.mult_window = "hanning"
+
+        elif selected_item == "Gaussian":
+            self.mult_window = "gaussian"
+            self.gui.slider_amplitude_2.setEnabled(True)
+
+        print(f"Selected window: {self.mult_window}")
+
 
     
-    def seek_forward(self):
-        # Get the current position in milliseconds
-        current_position = self.media_player.position()
-
-        # Seek forward by 5 seconds (5000 milliseconds)
+    def seek_forward(self, media):
+        current_position = media.position()
         new_position = current_position + 5000
-
-        # Set the new position
-        self.media_player.setPosition(new_position)
+        media.setPosition(new_position)
     
-    def seek_backward(self):
-        # Get the current position in milliseconds
-        current_position = self.media_player.position()
-
-        # Seek forward by 5 seconds (5000 milliseconds)
+    def seek_backward(self, media):
+        current_position = media.position()
         new_position = current_position - 5000
-
-        # Set the new position
-        self.media_player.setPosition(new_position)
+        media.setPosition(new_position)
 
 
-    def restart_file(self):
+    def restart_file(self, media, path):
         if self.sample_rate is not None:
-            # Create a QMediaContent object with the WAV file path
-            media_content = QMediaContent(QUrl.fromLocalFile(self.path))
-
-            # Set the media content to the media player
-            self.media_player.setMedia(media_content)
-
-            self.media_player.stop()
-            self.media_player.play()
+            media_content = QMediaContent(QUrl.fromLocalFile(path))
+            media.setMedia(media_content)
+            media.play()
 
 
-    def play_file(self):
+    def play_file(self, media, path):
         if self.sample_rate is not None:
-            # Create a QMediaContent object with the WAV file path
-            media_content = QMediaContent(QUrl.fromLocalFile(self.path))
-
-            # Set the media content to the media player
-            self.media_player.setMedia(media_content)
+            media_content = QMediaContent(QUrl.fromLocalFile(path))
+            media.setMedia(media_content)
 
             if self.media_player_status == 1:
-                # Pause the audio
-                self.current_position = self.media_player.position()
-                self.media_player.pause()
+                self.current_position = media.position()
+                media.pause()
                 self.media_player_status = 0
-            else:
-                # Set the position to the stored value
-                self.media_player.setPosition(self.current_position)
-                self.media_player.play()
+            else:              
+                media.play()
+                media.setPosition(self.current_position)
                 self.media_player_status = 1
+
             
 
     def on_media_state_changed(self, state):
@@ -155,10 +146,20 @@ class Equalizer(QMainWindow):
             print("Audio playback stopped")
         elif state == QMediaPlayer.PausedState:
             print("Audio playback paused")
+    
+    def on_media_state_changed_output(self, state):
+        # Handle media player state changes, e.g., update UI based on playback status
+        if state == QMediaPlayer.PlayingState:
+            print("Output Audio is playing")
+        elif state == QMediaPlayer.StoppedState:
+            print("Output Audio playback stopped")
+        elif state == QMediaPlayer.PausedState:
+            print("Output Audio playback paused")
 
 
     def save_wav_file(self):
-        wavfile.write(f'output.wav', self.sample_rate, self.data_modified)
+        normalized_array = np.interp( self.data_modified, (np.min(self.data_modified), np.max(self.data_modified)), (-32768, 32767)).astype(np.int16)
+        wavfile.write(f'output.wav', self.sample_rate, normalized_array)
 
 
     def open_wav_file(self):
@@ -184,8 +185,42 @@ class Equalizer(QMainWindow):
                 self.plot_on_main(self.data, self.data_fft)
                 self.plot_on_secondary(self.data_modified, self.data_modified_fft)
 
+                self.plot_spectrogram_main()
+                self.plot_spectrogram_secondary()
+
         except Exception as e:
             print(f"Error: {e}")
+    
+    # ... Your other class methods ...
+
+    def plot_spectrogram(self, ax, data, sample_rate, title, label_plot):
+        label_plot = pg.PlotWidget()
+        label_plot.setLabel('left', 'Frequency', units='Hz')
+        label_plot.setLabel('bottom', 'Time', units='s')
+        # Compute Spectrogram
+        f, t, sxx = spectrogram(data, fs=sample_rate)
+
+        # Plot Spectrogram
+        img = pg.ImageItem()
+        img.setImage(np.log(sxx + 1))
+        label_plot.addItem(img)
+
+        # Set colormap
+        colormap = pg.colormap.get('viridis')
+        img.setColorMap(colormap)
+        # self.show()
+
+
+
+    def plot_spectrogram_main(self):
+        self.plot_spectrogram(self.gui.plot_input_sig_spect, self.data, self.sample_rate, "Input Spectrogram", self.gui.plot_input_sig_spect)
+
+    def plot_spectrogram_secondary(self):
+        self.plot_spectrogram(self.gui.plot_output_sig_spect, self.data_modified, self.sample_rate, "Output Spectrogram", self.gui.plot_output_sig_spect)
+
+
+
+
 
 
     def plot_on_main(self, data, freq):
@@ -218,16 +253,17 @@ class Equalizer(QMainWindow):
             self.data_modified_fft,
             self.data_ranges[index][0],
             self.data_ranges[index][1],
-            10**((self.sliders[index].value()) / 20),
-            std_gaussian=self.section_width / 100,
+            10**(self.sliders[index].value()/20),
+            std_gaussian=self.section_width / self.std,
             mult_window=self.mult_window
         )
 
         self.data_modified = np.fft.ifft(self.data_modified_fft)
-        self.data_modified = self.data_modified.real.astype(np.int16)  # Real part only
+        self.data_modified = self.data_modified.real.astype(np.int64)  # Real part only
 
-        # wavfile.write(f'output.wav', self.sample_rate, self.data_modified)
+        
         self.plot_on_secondary(self.data_modified, self.data_modified_fft)
+        self.plot_spectrogram_secondary()
 
     def multiply_fft(self, data, start, end, index, std_gaussian, mult_window):
         modified_data = data.copy()
@@ -236,15 +272,15 @@ class Equalizer(QMainWindow):
             modified_data[start:end] = self.data_fft[start:end] * index
 
         elif mult_window == "hamming":
-            hamming_window = np.hamming(end - start) * index
+            hamming_window = np.hamming(end - start)[:, np.newaxis] * index
             modified_data[start:end] = self.data_fft[start:end] * hamming_window
 
         elif mult_window == "hanning":
-            hanning_window = np.hanning(end - start) * index
+            hanning_window = np.hanning(end - start)[:, np.newaxis] * index
             modified_data[start:end] = self.data_fft[start:end] * hanning_window
 
         elif mult_window == "gaussian":
-            gaussian_window = np.exp(-0.5 * ((np.arange(end - start) - (end - start) / 2) / std_gaussian) ** 2) * index
+            gaussian_window = np.exp(-0.5 * ((np.arange(end - start) - (end - start) / 2) / std_gaussian) ** 2)[:, np.newaxis] * index
             modified_data[start:end] = self.data_fft[start:end] * gaussian_window
 
         return modified_data
