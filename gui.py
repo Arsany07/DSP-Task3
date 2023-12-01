@@ -14,8 +14,511 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1320, 819)
+        MainWindow.resize(1414, 824)
+        MainWindow.setStyleSheet("\n"
+"      /*\n"
+"Ubuntu Style Sheet for QT Applications\n"
+"Author: Jaime A. Quiroga P.\n"
+"Company: GTRONICK\n"
+"Last updated: 01/10/2021 (dd/mm/yyyy), 15:18.\n"
+"Available at: https://github.com/GTRONICK/QSS/blob/master/Ubuntu.qss\n"
+"*/\n"
+"QMainWindow {\n"
+"    background-color:#f0f0f0;\n"
+"}\n"
+"QCheckBox {\n"
+"    padding:2px;\n"
+"}\n"
+"QCheckBox:hover {\n"
+"    border:1px solid rgb(255,150,60);\n"
+"    border-radius:4px;\n"
+"    padding: 1px;\n"
+"    background-color:qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(190, 90, 50, 50), stop:1 rgba(250, 130, 40, 50));\n"
+"}\n"
+"QCheckBox::indicator:checked {\n"
+"    border:1px solid rgb(246, 134, 86);\n"
+"    border-radius:4px;\n"
+"      background-color:rgb(246, 134, 86)\n"
+"}\n"
+"QCheckBox::indicator:unchecked {\n"
+"    border-width:1px solid rgb(246, 134, 86);\n"
+"    border-radius:4px;\n"
+"      background-color:rgb(255,255,255);\n"
+"}\n"
+"QColorDialog {\n"
+"    background-color:#f0f0f0;\n"
+"}\n"
+"QComboBox {\n"
+"    color:rgb(81,72,65);\n"
+"    background: #ffffff;\n"
+"}\n"
+"QComboBox:editable {\n"
+"    selection-color:rgb(81,72,65);\n"
+"    selection-background-color: #ffffff;\n"
+"}\n"
+"QComboBox QAbstractItemView {\n"
+"    selection-color: #ffffff;\n"
+"    selection-background-color: rgb(246, 134, 86);\n"
+"}\n"
+"QComboBox:!editable:on, QComboBox::drop-down:editable:on {\n"
+"    color:  #1e1d23;    \n"
+"}\n"
+"QDateTimeEdit, QDateEdit, QDoubleSpinBox, QFontComboBox {\n"
+"    color:rgb(81,72,65);\n"
+"    background-color: #ffffff;\n"
+"}\n"
+"\n"
+"QDialog {\n"
+"    background-color:#f0f0f0;\n"
+"}\n"
+"\n"
+"QLabel,QLineEdit {\n"
+"    color:rgb(17,17,17);\n"
+"}\n"
+"QLineEdit {\n"
+"    background-color:rgb(255,255,255);\n"
+"    selection-background-color:rgb(236,116,64);\n"
+"}\n"
+"QMenuBar {\n"
+"    color:rgb(223,219,210);\n"
+"    background-color:rgb(65,64,59);\n"
+"}\n"
+"QMenuBar::item {\n"
+"    padding-top:4px;\n"
+"    padding-left:4px;\n"
+"    padding-right:4px;\n"
+"    color:rgb(223,219,210);\n"
+"    background-color:rgb(65,64,59);\n"
+"}\n"
+"QMenuBar::item:selected {\n"
+"    color:rgb(255,255,255);\n"
+"    padding-top:2px;\n"
+"    padding-left:2px;\n"
+"    padding-right:2px;\n"
+"    border-top-width:2px;\n"
+"    border-left-width:2px;\n"
+"    border-right-width:2px;\n"
+"    border-top-right-radius:4px;\n"
+"    border-top-left-radius:4px;\n"
+"    border-style:solid;\n"
+"    background-color:rgb(65,64,59);\n"
+"    border-top-color: rgb(47,47,44);\n"
+"    border-right-color: qlineargradient(spread:pad, x1:0, y1:1, x2:1, y2:0, stop:0 rgba(90, 87, 78, 255), stop:1 rgba(47,47,44, 255));\n"
+"    border-left-color:  qlineargradient(spread:pad, x1:1, y1:0, x2:0, y2:0, stop:0 rgba(90, 87, 78, 255), stop:1 rgba(47,47,44, 255));\n"
+"}\n"
+"QMenu {\n"
+"    color:rgb(223,219,210);\n"
+"    background-color:rgb(65,64,59);\n"
+"}\n"
+"QMenu::item {\n"
+"    color:rgb(223,219,210);\n"
+"    padding:4px 10px 4px 20px;\n"
+"}\n"
+"QMenu::item:selected {\n"
+"    color:rgb(255,255,255);\n"
+"    background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(225, 108, 54, 255), stop:1 rgba(246, 134, 86, 255));\n"
+"    border-style:solid;\n"
+"    border-width:3px;\n"
+"    padding:4px 7px 4px 17px;\n"
+"    border-bottom-color:qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(175,85,48,255), stop:1 rgba(236,114,67, 255));\n"
+"    border-top-color:qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(253,156,113,255), stop:1 rgba(205,90,46, 255));\n"
+"    border-right-color:qlineargradient(spread:pad, x1:0, y1:0.5, x2:1, y2:0.5, stop:0 rgba(253,156,113,255), stop:1 rgba(205,90,46, 255));\n"
+"    border-left-color:qlineargradient(spread:pad, x1:1, y1:0.5, x2:0, y2:0.5, stop:0 rgba(253,156,113,255), stop:1 rgba(205,90,46, 255));\n"
+"}\n"
+"QPlainTextEdit {\n"
+"    border: 1px solid transparent;\n"
+"    color:rgb(17,17,17);\n"
+"    selection-background-color:rgb(236,116,64);\n"
+"    background-color: #FFFFFF;\n"
+"}\n"
+"QProgressBar {\n"
+"    text-align: center;\n"
+"    color: rgb(0, 0, 0);\n"
+"    border: 1px inset rgb(150,150,150); \n"
+"    border-radius: 10px;\n"
+"    background-color:rgb(221,221,219);\n"
+"}\n"
+"QProgressBar::chunk:horizontal {\n"
+"    background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(225, 108, 54, 255), stop:1 rgba(246, 134, 86, 255));\n"
+"    border:1px solid;\n"
+"    border-radius:8px;\n"
+"    border-bottom-color:qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(175,85,48,255), stop:1 rgba(236,114,67, 255));\n"
+"    border-top-color:qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(253,156,113,255), stop:1 rgba(205,90,46, 255));\n"
+"    border-right-color:qlineargradient(spread:pad, x1:0, y1:0.5, x2:1, y2:0.5, stop:0 rgba(253,156,113,255), stop:1 rgba(205,90,46, 255));\n"
+"    border-left-color:qlineargradient(spread:pad, x1:1, y1:0.5, x2:0, y2:0.5, stop:0 rgba(253,156,113,255), stop:1 rgba(205,90,46, 255));\n"
+"}\n"
+"QPushButton{\n"
+"    color:rgb(17,17,17);\n"
+"    border-width: 1px;\n"
+"    border-radius: 6px;\n"
+"    border-bottom-color: rgb(150,150,150);\n"
+"    border-right-color: rgb(165,165,165);\n"
+"    border-left-color: rgb(165,165,165);\n"
+"    border-top-color: rgb(180,180,180);\n"
+"    border-style: solid;\n"
+"    padding: 4px;\n"
+"    background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(220, 220, 220, 255), stop:1 rgba(255, 255, 255, 255));\n"
+"}\n"
+"QPushButton:hover{\n"
+"    color:rgb(17,17,17);\n"
+"    border-width: 1px;\n"
+"    border-radius:6px;\n"
+"    border-top-color: rgb(255,150,60);\n"
+"    border-right-color: qlineargradient(spread:pad, x1:0, y1:1, x2:1, y2:0, stop:0 rgba(200, 70, 20, 255), stop:1 rgba(255,150,60, 255));\n"
+"    border-left-color:  qlineargradient(spread:pad, x1:1, y1:0, x2:0, y2:0, stop:0 rgba(200, 70, 20, 255), stop:1 rgba(255,150,60, 255));\n"
+"    border-bottom-color: rgb(200,70,20);\n"
+"    border-style: solid;\n"
+"    padding: 2px;\n"
+"    background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(220, 220, 220, 255), stop:1 rgba(255, 255, 255, 255));\n"
+"}\n"
+"QPushButton:default{\n"
+"    color:rgb(17,17,17);\n"
+"    border-width: 1px;\n"
+"    border-radius:6px;\n"
+"    border-top-color: rgb(255,150,60);\n"
+"    border-right-color: qlineargradient(spread:pad, x1:0, y1:1, x2:1, y2:0, stop:0 rgba(200, 70, 20, 255), stop:1 rgba(255,150,60, 255));\n"
+"    border-left-color:  qlineargradient(spread:pad, x1:1, y1:0, x2:0, y2:0, stop:0 rgba(200, 70, 20, 255), stop:1 rgba(255,150,60, 255));\n"
+"    border-bottom-color: rgb(200,70,20);\n"
+"    border-style: solid;\n"
+"    padding: 2px;\n"
+"    background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(220, 220, 220, 255), stop:1 rgba(255, 255, 255, 255));\n"
+"}\n"
+"QPushButton:pressed{\n"
+"    color:rgb(17,17,17);\n"
+"    border-width: 1px;\n"
+"    border-radius: 6px;\n"
+"    border-width: 1px;\n"
+"    border-top-color: rgba(255,150,60,200);\n"
+"    border-right-color: qlineargradient(spread:pad, x1:0, y1:1, x2:1, y2:0, stop:0 rgba(200, 70, 20, 255), stop:1 rgba(255,150,60, 200));\n"
+"    border-left-color:  qlineargradient(spread:pad, x1:1, y1:0, x2:0, y2:0, stop:0 rgba(200, 70, 20, 255), stop:1 rgba(255,150,60, 200));\n"
+"    border-bottom-color: rgba(200,70,20,200);\n"
+"    border-style: solid;\n"
+"    padding: 2px;\n"
+"    background-color: qlineargradient(spread:pad, x1:0.5, y1:0, x2:0.5, y2:1, stop:0 rgba(220, 220, 220, 255), stop:1 rgba(255, 255, 255, 255));\n"
+"}\n"
+"QPushButton:disabled{\n"
+"    color:rgb(174,167,159);\n"
+"    border-width: 1px;\n"
+"    border-radius: 6px;\n"
+"    background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(200, 200, 200, 255), stop:1 rgba(230, 230, 230, 255));\n"
+"}\n"
+"QRadioButton {\n"
+"    padding: 1px;\n"
+"}\n"
+"QRadioButton::indicator:checked {\n"
+"    height: 10px;\n"
+"    width: 10px;\n"
+"    border-style:solid;\n"
+"    border-radius:5px;\n"
+"    border-width: 1px;\n"
+"    border-color: rgba(246, 134, 86, 255);\n"
+"    color: #a9b7c6;\n"
+"    background-color:rgba(246, 134, 86, 255);\n"
+"}\n"
+"QRadioButton::indicator:!checked {\n"
+"    height: 10px;\n"
+"    width: 10px;\n"
+"    border-style:solid;\n"
+"    border-radius:5px;\n"
+"    border-width: 1px;\n"
+"    border-color: rgb(246, 134, 86);\n"
+"    color: #a9b7c6;\n"
+"    background-color: transparent;\n"
+"}\n"
+"QScrollArea {\n"
+"    color: white;\n"
+"    background-color:#f0f0f0;\n"
+"}\n"
+"QSlider::groove {\n"
+"    border-style: solid;\n"
+"    border-width: 1px;\n"
+"    border-color: rgb(207,207,207);\n"
+"}\n"
+"QSlider::groove:horizontal {\n"
+"    height: 5px;\n"
+"    background: rgb(246, 134, 86);\n"
+"}\n"
+"QSlider::groove:vertical {\n"
+"    width: 5px;\n"
+"    background: rgb(246, 134, 86);\n"
+"}\n"
+"QSlider::handle:horizontal {\n"
+"    background: rgb(253,253,253);\n"
+"    border-style: solid;\n"
+"    border-width: 1px;\n"
+"    border-color: rgb(207,207,207);\n"
+"    width: 12px;\n"
+"    margin: -5px 0;\n"
+"    border-radius: 7px;\n"
+"}\n"
+"QSlider::handle:vertical {\n"
+"    background: rgb(253,253,253);\n"
+"    border-style: solid;\n"
+"    border-width: 1px;\n"
+"    border-color: rgb(207,207,207);\n"
+"    height: 12px;\n"
+"    margin: 0 -5px;\n"
+"    border-radius: 7px;\n"
+"}\n"
+"QSlider::add-page:horizontal, QSlider::add-page:vertical {\n"
+"     background: white;\n"
+"}\n"
+"QSlider::sub-page:horizontal, QSlider::sub-page:vertical {\n"
+"    background: rgb(246, 134, 86);\n"
+"}\n"
+"QStatusBar, QSpinBox {\n"
+"    color:rgb(81,72,65);\n"
+"}\n"
+"QSpinBox {\n"
+"    background-color: #ffffff;\n"
+"}\n"
+"QScrollBar:horizontal {\n"
+"    max-height: 20px;\n"
+"    border: 1px transparent;\n"
+"    margin: 0px 20px 0px 20px;\n"
+"}\n"
+"QScrollBar::handle:horizontal {\n"
+"    background: rgb(253,253,253);\n"
+"    border: 1px solid rgb(207,207,207);\n"
+"    border-radius: 7px;\n"
+"    min-width: 25px;\n"
+"}\n"
+"QScrollBar::handle:horizontal:hover {\n"
+"    background: rgb(253,253,253);\n"
+"    border: 1px solid rgb(255,150,60);\n"
+"    border-radius: 7px;\n"
+"    min-width: 25px;\n"
+"}\n"
+"QScrollBar::add-line:horizontal {\n"
+"      border: 1px solid rgb(207,207,207);\n"
+"      border-top-right-radius: 7px;\n"
+"      border-top-left-radius: 7px;\n"
+"      border-bottom-right-radius: 7px;\n"
+"      background: rgb(255, 255, 255);\n"
+"      width: 20px;\n"
+"      subcontrol-position: right;\n"
+"      subcontrol-origin: margin;\n"
+"}\n"
+"QScrollBar::add-line:horizontal:hover {\n"
+"      border: 1px solid rgb(255,150,60);\n"
+"      border-top-right-radius: 7px;\n"
+"      border-top-left-radius: 7px;\n"
+"      border-bottom-right-radius: 7px;\n"
+"      background: rgb(255, 255, 255);\n"
+"      width: 20px;\n"
+"      subcontrol-position: right;\n"
+"      subcontrol-origin: margin;\n"
+"}\n"
+"QScrollBar::add-line:horizontal:pressed {\n"
+"      border: 1px solid grey;\n"
+"      border-top-left-radius: 7px;\n"
+"      border-top-right-radius: 7px;\n"
+"      border-bottom-right-radius: 7px;\n"
+"      background: rgb(231,231,231);\n"
+"      width: 20px;\n"
+"      subcontrol-position: right;\n"
+"      subcontrol-origin: margin;\n"
+"}\n"
+"QScrollBar::sub-line:horizontal {\n"
+"      border: 1px solid rgb(207,207,207);\n"
+"      border-top-right-radius: 7px;\n"
+"      border-top-left-radius: 7px;\n"
+"      border-bottom-left-radius: 7px;\n"
+"      background: rgb(255, 255, 255);\n"
+"      width: 20px;\n"
+"      subcontrol-position: left;\n"
+"      subcontrol-origin: margin;\n"
+"}\n"
+"QScrollBar::sub-line:horizontal:hover {\n"
+"      border: 1px solid rgb(255,150,60);\n"
+"      border-top-right-radius: 7px;\n"
+"      border-top-left-radius: 7px;\n"
+"      border-bottom-left-radius: 7px;\n"
+"      background: rgb(255, 255, 255);\n"
+"      width: 20px;\n"
+"      subcontrol-position: left;\n"
+"      subcontrol-origin: margin;\n"
+"}\n"
+"QScrollBar::sub-line:horizontal:pressed {\n"
+"      border: 1px solid grey;\n"
+"      border-top-right-radius: 7px;\n"
+"      border-top-left-radius: 7px;\n"
+"      border-bottom-left-radius: 7px;\n"
+"      background: rgb(231,231,231);\n"
+"      width: 20px;\n"
+"      subcontrol-position: left;\n"
+"      subcontrol-origin: margin;\n"
+"}\n"
+"QScrollBar::left-arrow:horizontal {\n"
+"      border: 1px transparent grey;\n"
+"      border-top-left-radius: 3px;\n"
+"      border-bottom-left-radius: 3px;\n"
+"      width: 6px;\n"
+"      height: 6px;\n"
+"      background: rgb(230,230,230);\n"
+"}\n"
+"QScrollBar::right-arrow:horizontal {\n"
+"    border: 1px transparent grey;\n"
+"    border-top-right-radius: 3px;\n"
+"    border-bottom-right-radius: 3px;\n"
+"      width: 6px;\n"
+"      height: 6px;\n"
+"     background: rgb(230,230,230);\n"
+"}\n"
+"QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {\n"
+"     background: none;\n"
+"} \n"
+"QScrollBar:vertical {\n"
+"    max-width: 20px;\n"
+"    border: 1px transparent grey;\n"
+"    margin: 20px 0px 20px 0px;\n"
+"}\n"
+"QScrollBar::add-line:vertical {\n"
+"    border: 1px solid;\n"
+"    border-color: rgb(207,207,207);\n"
+"    border-bottom-right-radius: 7px;\n"
+"    border-bottom-left-radius: 7px;\n"
+"    border-top-left-radius: 7px;\n"
+"    background: rgb(255, 255, 255);\n"
+"      height: 20px;\n"
+"      subcontrol-position: bottom;\n"
+"      subcontrol-origin: margin;\n"
+"}\n"
+"QScrollBar::add-line:vertical:hover {\n"
+"      border: 1px solid;\n"
+"      border-color: rgb(255,150,60);\n"
+"      border-bottom-right-radius: 7px;\n"
+"      border-bottom-left-radius: 7px;\n"
+"      border-top-left-radius: 7px;\n"
+"      background: rgb(255, 255, 255);\n"
+"      height: 20px;\n"
+"      subcontrol-position: bottom;\n"
+"      subcontrol-origin: margin;\n"
+"}\n"
+"QScrollBar::add-line:vertical:pressed {\n"
+"      border: 1px solid grey;\n"
+"      border-bottom-left-radius: 7px;\n"
+"      border-bottom-right-radius: 7px;\n"
+"      border-top-left-radius: 7px;\n"
+"      background: rgb(231,231,231);\n"
+"      height: 20px;\n"
+"      subcontrol-position: bottom;\n"
+"      subcontrol-origin: margin;\n"
+"}\n"
+"QScrollBar::sub-line:vertical {\n"
+"      border: 1px solid rgb(207,207,207);\n"
+"      border-top-right-radius: 7px;\n"
+"      border-top-left-radius: 7px;\n"
+"      border-bottom-left-radius: 7px;\n"
+"      background: rgb(255, 255, 255);\n"
+"      height: 20px;\n"
+"      subcontrol-position: top;\n"
+"      subcontrol-origin: margin;\n"
+"}\n"
+"QScrollBar::sub-line:vertical:hover {\n"
+"      border: 1px solid rgb(255,150,60);\n"
+"      border-top-right-radius: 7px;\n"
+"      border-top-left-radius: 7px;\n"
+"      border-bottom-left-radius: 7px;\n"
+"    background: rgb(255, 255, 255);\n"
+"      height: 20px;\n"
+"      subcontrol-position: top;\n"
+"      subcontrol-origin: margin;\n"
+"}\n"
+"QScrollBar::sub-line:vertical:pressed {\n"
+"      border: 1px solid grey;\n"
+"      border-top-left-radius: 7px;\n"
+"      border-top-right-radius: 7px;\n"
+"      background: rgb(231,231,231);\n"
+"     height: 20px;\n"
+"      subcontrol-position: top;\n"
+"      subcontrol-origin: margin;\n"
+"}\n"
+"QScrollBar::handle:vertical {\n"
+"    background: rgb(253,253,253);\n"
+"    border: 1px solid rgb(207,207,207);\n"
+"    border-radius: 7px;\n"
+"    min-height: 25px;\n"
+"}\n"
+"QScrollBar::handle:vertical:hover {\n"
+"    background: rgb(253,253,253);\n"
+"    border: 1px solid rgb(255,150,60);\n"
+"    border-radius: 7px;\n"
+"    min-height: 25px;\n"
+"}\n"
+"QScrollBar::up-arrow:vertical {\n"
+"    border: 1px transparent grey;\n"
+"      border-top-left-radius: 3px;\n"
+"    border-top-right-radius: 3px;\n"
+"      width: 6px;\n"
+"      height: 6px;\n"
+"      background: rgb(230,230,230);\n"
+"}\n"
+"QScrollBar::down-arrow:vertical {\n"
+"      border: 1px transparent grey;\n"
+"      border-bottom-left-radius: 3px;\n"
+"      border-bottom-right-radius: 3px;\n"
+"      width: 6px;\n"
+"      height: 6px;\n"
+"      background: rgb(230,230,230);\n"
+"}\n"
+"QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {\n"
+"      background: none;\n"
+"}\n"
+"QTabWidget {\n"
+"    color:rgb(0,0,0);\n"
+"    background-color:rgb(247,246,246);\n"
+"}\n"
+"QTabWidget::pane {\n"
+"    border-color: rgb(180,180,180);\n"
+"    background-color:rgb(247,246,246);\n"
+"    border-style: solid;\n"
+"    border-width: 1px;\n"
+"      border-radius: 6px;\n"
+"}\n"
+"QTabBar::tab {\n"
+"    padding-left:4px;\n"
+"    padding-right:4px;\n"
+"    padding-bottom:2px;\n"
+"    padding-top:2px;\n"
+"    color:rgb(81,72,65);\n"
+"      background-color: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgba(221,218,217,255), stop:1 rgba(240,239,238,255));\n"
+"    border-style: solid;\n"
+"    border-width: 1px;\n"
+"      border-top-right-radius:4px;\n"
+"    border-top-left-radius:4px;\n"
+"    border-top-color: rgb(180,180,180);\n"
+"    border-left-color: rgb(180,180,180);\n"
+"    border-right-color: rgb(180,180,180);\n"
+"    border-bottom-color: transparent;\n"
+"}\n"
+"QTabBar::tab:selected, QTabBar::tab:last:selected, QTabBar::tab:hover {\n"
+"      background-color:rgb(247,246,246);\n"
+"      margin-left: 0px;\n"
+"      margin-right: 1px;\n"
+"}\n"
+"QTabBar::tab:!selected {\n"
+"    margin-top: 1px;\n"
+"    margin-right: 1px;\n"
+"}\n"
+"QTextEdit {\n"
+"    border-width: 1px;\n"
+"    border-style: solid;\n"
+"    border-color:transparent;\n"
+"    color:rgb(17,17,17);\n"
+"    selection-background-color:rgb(236,116,64);\n"
+"}\n"
+"QTimeEdit, QToolBox, QToolBox::tab, QToolBox::tab:selected {\n"
+"    color:rgb(81,72,65);\n"
+"    background-color: #ffffff;\n"
+"}\n"
+"    ")
         self.centralwidget = QtWidgets.QWidget(MainWindow)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.centralwidget.sizePolicy().hasHeightForWidth())
+        self.centralwidget.setSizePolicy(sizePolicy)
         self.centralwidget.setObjectName("centralwidget")
         self.gridLayout_12 = QtWidgets.QGridLayout(self.centralwidget)
         self.gridLayout_12.setObjectName("gridLayout_12")
@@ -33,73 +536,6 @@ class Ui_MainWindow(object):
         self.cmbx_mode_selection.addItem("")
         self.cmbx_mode_selection.addItem("")
         self.gridLayout_12.addWidget(self.cmbx_mode_selection, 0, 0, 1, 1)
-        self.horizontalLayout_8 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_8.setObjectName("horizontalLayout_8")
-        self.grpbx_input = QtWidgets.QGroupBox(self.centralwidget)
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        self.grpbx_input.setFont(font)
-        self.grpbx_input.setObjectName("grpbx_input")
-        self.gridLayout_14 = QtWidgets.QGridLayout(self.grpbx_input)
-        self.gridLayout_14.setObjectName("gridLayout_14")
-        self.plot_input_sig_spect = PlotWidget(self.grpbx_input)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.MinimumExpanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.plot_input_sig_spect.sizePolicy().hasHeightForWidth())
-        self.plot_input_sig_spect.setSizePolicy(sizePolicy)
-        self.plot_input_sig_spect.setObjectName("plot_input_sig_spect")
-        self.gridLayout_14.addWidget(self.plot_input_sig_spect, 1, 1, 1, 1)
-        self.plot_input_sig_freq = PlotWidget(self.grpbx_input)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.MinimumExpanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.plot_input_sig_freq.sizePolicy().hasHeightForWidth())
-        self.plot_input_sig_freq.setSizePolicy(sizePolicy)
-        self.plot_input_sig_freq.setObjectName("plot_input_sig_freq")
-        self.gridLayout_14.addWidget(self.plot_input_sig_freq, 1, 0, 1, 1)
-        self.plot_input_sig_time = PlotWidget(self.grpbx_input)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.MinimumExpanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.plot_input_sig_time.sizePolicy().hasHeightForWidth())
-        self.plot_input_sig_time.setSizePolicy(sizePolicy)
-        self.plot_input_sig_time.setObjectName("plot_input_sig_time")
-        self.gridLayout_14.addWidget(self.plot_input_sig_time, 0, 0, 1, 2)
-        self.horizontalLayout_8.addWidget(self.grpbx_input)
-        self.grpbx_output = QtWidgets.QGroupBox(self.centralwidget)
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        self.grpbx_output.setFont(font)
-        self.grpbx_output.setObjectName("grpbx_output")
-        self.gridLayout_15 = QtWidgets.QGridLayout(self.grpbx_output)
-        self.gridLayout_15.setObjectName("gridLayout_15")
-        self.plot_output_sig_freq = PlotWidget(self.grpbx_output)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.MinimumExpanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.plot_output_sig_freq.sizePolicy().hasHeightForWidth())
-        self.plot_output_sig_freq.setSizePolicy(sizePolicy)
-        self.plot_output_sig_freq.setObjectName("plot_output_sig_freq")
-        self.gridLayout_15.addWidget(self.plot_output_sig_freq, 1, 0, 1, 1)
-        self.plot_output_sig_spect = PlotWidget(self.grpbx_output)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.MinimumExpanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.plot_output_sig_spect.sizePolicy().hasHeightForWidth())
-        self.plot_output_sig_spect.setSizePolicy(sizePolicy)
-        self.plot_output_sig_spect.setObjectName("plot_output_sig_spect")
-        self.gridLayout_15.addWidget(self.plot_output_sig_spect, 1, 1, 1, 1)
-        self.plot_output_sig_time = PlotWidget(self.grpbx_output)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.MinimumExpanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.plot_output_sig_time.sizePolicy().hasHeightForWidth())
-        self.plot_output_sig_time.setSizePolicy(sizePolicy)
-        self.plot_output_sig_time.setObjectName("plot_output_sig_time")
-        self.gridLayout_15.addWidget(self.plot_output_sig_time, 0, 0, 1, 2)
-        self.horizontalLayout_8.addWidget(self.grpbx_output)
-        self.gridLayout_12.addLayout(self.horizontalLayout_8, 1, 0, 1, 2)
         self.horizontalLayout_4 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
         spacerItem = QtWidgets.QSpacerItem(68, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -133,7 +569,7 @@ class Ui_MainWindow(object):
         self.btn_pan_right_input = QtWidgets.QPushButton(self.centralwidget)
         self.btn_pan_right_input.setText("")
         icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap("icons/fastForward.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon3.addPixmap(QtGui.QPixmap("icons/skipforward.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.btn_pan_right_input.setIcon(icon3)
         self.btn_pan_right_input.setObjectName("btn_pan_right_input")
         self.horizontalLayout.addWidget(self.btn_pan_right_input)
@@ -199,43 +635,13 @@ class Ui_MainWindow(object):
         self.line_2.setObjectName("line_2")
         self.gridLayout_12.addWidget(self.line_2, 3, 0, 1, 2)
         self.grpbx_multWindow = QtWidgets.QGroupBox(self.centralwidget)
+        self.grpbx_multWindow.setMaximumSize(QtCore.QSize(300, 16777215))
         font = QtGui.QFont()
         font.setPointSize(10)
         self.grpbx_multWindow.setFont(font)
         self.grpbx_multWindow.setObjectName("grpbx_multWindow")
         self.gridLayout_17 = QtWidgets.QGridLayout(self.grpbx_multWindow)
         self.gridLayout_17.setObjectName("gridLayout_17")
-        self.plot_multWindow = PlotWidget(self.grpbx_multWindow)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(150)
-        sizePolicy.setHeightForWidth(self.plot_multWindow.sizePolicy().hasHeightForWidth())
-        self.plot_multWindow.setSizePolicy(sizePolicy)
-        self.plot_multWindow.setMinimumSize(QtCore.QSize(0, 50))
-        self.plot_multWindow.setBaseSize(QtCore.QSize(0, 1))
-        self.plot_multWindow.setObjectName("plot_multWindow")
-        self.gridLayout_17.addWidget(self.plot_multWindow, 0, 0, 1, 1)
-        self.line = QtWidgets.QFrame(self.grpbx_multWindow)
-        self.line.setFrameShape(QtWidgets.QFrame.HLine)
-        self.line.setFrameShadow(QtWidgets.QFrame.Sunken)
-        self.line.setObjectName("line")
-        self.gridLayout_17.addWidget(self.line, 2, 0, 1, 2)
-        self.cmbx_multWindow = QtWidgets.QComboBox(self.grpbx_multWindow)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.cmbx_multWindow.sizePolicy().hasHeightForWidth())
-        self.cmbx_multWindow.setSizePolicy(sizePolicy)
-        self.cmbx_multWindow.setMinimumSize(QtCore.QSize(100, 25))
-        self.cmbx_multWindow.setMaximumSize(QtCore.QSize(120, 30))
-        self.cmbx_multWindow.setBaseSize(QtCore.QSize(0, 0))
-        self.cmbx_multWindow.setSizeAdjustPolicy(QtWidgets.QComboBox.AdjustToContents)
-        self.cmbx_multWindow.setObjectName("cmbx_multWindow")
-        self.cmbx_multWindow.addItem("")
-        self.cmbx_multWindow.addItem("")
-        self.cmbx_multWindow.addItem("")
-        self.cmbx_multWindow.addItem("")
-        self.gridLayout_17.addWidget(self.cmbx_multWindow, 0, 1, 1, 1)
         self.wgt_multWindow_amp = QtWidgets.QWidget(self.grpbx_multWindow)
         self.wgt_multWindow_amp.setObjectName("wgt_multWindow_amp")
         self.gridLayout_16 = QtWidgets.QGridLayout(self.wgt_multWindow_amp)
@@ -253,31 +659,48 @@ class Ui_MainWindow(object):
         self.slider_amplitude_2.setOrientation(QtCore.Qt.Horizontal)
         self.slider_amplitude_2.setObjectName("slider_amplitude_2")
         self.gridLayout_16.addWidget(self.slider_amplitude_2, 2, 0, 1, 1)
-        self.gridLayout_17.addWidget(self.wgt_multWindow_amp, 4, 0, 1, 2)
-        self.gridLayout_12.addWidget(self.grpbx_multWindow, 4, 0, 1, 1)
-        self.frame = QtWidgets.QFrame(self.centralwidget)
+        self.gridLayout_17.addWidget(self.wgt_multWindow_amp, 5, 0, 1, 2)
+        self.plot_multWindow = PlotWidget(self.grpbx_multWindow)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(150)
+        sizePolicy.setHeightForWidth(self.plot_multWindow.sizePolicy().hasHeightForWidth())
+        self.plot_multWindow.setSizePolicy(sizePolicy)
+        self.plot_multWindow.setMinimumSize(QtCore.QSize(0, 50))
+        self.plot_multWindow.setBaseSize(QtCore.QSize(0, 1))
+        self.plot_multWindow.setObjectName("plot_multWindow")
+        self.gridLayout_17.addWidget(self.plot_multWindow, 1, 0, 1, 1)
+        self.line = QtWidgets.QFrame(self.grpbx_multWindow)
+        self.line.setFrameShape(QtWidgets.QFrame.HLine)
+        self.line.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.line.setObjectName("line")
+        self.gridLayout_17.addWidget(self.line, 3, 0, 1, 2)
+        self.cmbx_multWindow = QtWidgets.QComboBox(self.grpbx_multWindow)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.frame.sizePolicy().hasHeightForWidth())
-        self.frame.setSizePolicy(sizePolicy)
-        self.frame.setMaximumSize(QtCore.QSize(1000, 16777215))
-        self.frame.setFrameShadow(QtWidgets.QFrame.Sunken)
-        self.frame.setLineWidth(1)
-        self.frame.setObjectName("frame")
-        self.gridLayout_20 = QtWidgets.QGridLayout(self.frame)
-        self.gridLayout_20.setSizeConstraint(QtWidgets.QLayout.SetMinimumSize)
-        self.gridLayout_20.setObjectName("gridLayout_20")
-        self.wgt_sliders = QtWidgets.QWidget(self.frame)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
+        sizePolicy.setHeightForWidth(self.cmbx_multWindow.sizePolicy().hasHeightForWidth())
+        self.cmbx_multWindow.setSizePolicy(sizePolicy)
+        self.cmbx_multWindow.setMinimumSize(QtCore.QSize(100, 25))
+        self.cmbx_multWindow.setMaximumSize(QtCore.QSize(120, 30))
+        self.cmbx_multWindow.setBaseSize(QtCore.QSize(0, 0))
+        self.cmbx_multWindow.setSizeAdjustPolicy(QtWidgets.QComboBox.AdjustToContents)
+        self.cmbx_multWindow.setObjectName("cmbx_multWindow")
+        self.cmbx_multWindow.addItem("")
+        self.cmbx_multWindow.addItem("")
+        self.cmbx_multWindow.addItem("")
+        self.cmbx_multWindow.addItem("")
+        self.gridLayout_17.addWidget(self.cmbx_multWindow, 0, 0, 1, 1)
+        self.gridLayout_12.addWidget(self.grpbx_multWindow, 4, 0, 1, 1)
+        self.wgt_sliders = QtWidgets.QWidget(self.centralwidget)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Minimum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.wgt_sliders.sizePolicy().hasHeightForWidth())
         self.wgt_sliders.setSizePolicy(sizePolicy)
-        self.wgt_sliders.setMaximumSize(QtCore.QSize(1000, 16777215))
+        self.wgt_sliders.setMaximumSize(QtCore.QSize(16777215, 16777215))
         self.wgt_sliders.setObjectName("wgt_sliders")
         self.gridLayout_2 = QtWidgets.QGridLayout(self.wgt_sliders)
-        self.gridLayout_2.setSizeConstraint(QtWidgets.QLayout.SetMinimumSize)
         self.gridLayout_2.setObjectName("gridLayout_2")
         self.verticalLayout_12 = QtWidgets.QVBoxLayout()
         self.verticalLayout_12.setObjectName("verticalLayout_12")
@@ -343,6 +766,8 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.lnEdit_gain_slider_1.sizePolicy().hasHeightForWidth())
         self.lnEdit_gain_slider_1.setSizePolicy(sizePolicy)
+        self.lnEdit_gain_slider_1.setMinimumSize(QtCore.QSize(50, 0))
+        self.lnEdit_gain_slider_1.setMaximumSize(QtCore.QSize(60, 16777215))
         self.lnEdit_gain_slider_1.setAlignment(QtCore.Qt.AlignCenter)
         self.lnEdit_gain_slider_1.setReadOnly(True)
         self.lnEdit_gain_slider_1.setObjectName("lnEdit_gain_slider_1")
@@ -373,6 +798,8 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.lnEdit_freq_slider_1.sizePolicy().hasHeightForWidth())
         self.lnEdit_freq_slider_1.setSizePolicy(sizePolicy)
+        self.lnEdit_freq_slider_1.setMinimumSize(QtCore.QSize(50, 0))
+        self.lnEdit_freq_slider_1.setMaximumSize(QtCore.QSize(60, 16777215))
         self.lnEdit_freq_slider_1.setInputMask("")
         self.lnEdit_freq_slider_1.setAlignment(QtCore.Qt.AlignCenter)
         self.lnEdit_freq_slider_1.setReadOnly(True)
@@ -415,6 +842,8 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.lnEdit_freq_slider_2.sizePolicy().hasHeightForWidth())
         self.lnEdit_freq_slider_2.setSizePolicy(sizePolicy)
+        self.lnEdit_freq_slider_2.setMinimumSize(QtCore.QSize(50, 0))
+        self.lnEdit_freq_slider_2.setMaximumSize(QtCore.QSize(60, 16777215))
         self.lnEdit_freq_slider_2.setInputMask("")
         self.lnEdit_freq_slider_2.setAlignment(QtCore.Qt.AlignCenter)
         self.lnEdit_freq_slider_2.setReadOnly(True)
@@ -426,6 +855,8 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.lnEdit_gain_slider_2.sizePolicy().hasHeightForWidth())
         self.lnEdit_gain_slider_2.setSizePolicy(sizePolicy)
+        self.lnEdit_gain_slider_2.setMinimumSize(QtCore.QSize(50, 0))
+        self.lnEdit_gain_slider_2.setMaximumSize(QtCore.QSize(60, 16777215))
         self.lnEdit_gain_slider_2.setAlignment(QtCore.Qt.AlignCenter)
         self.lnEdit_gain_slider_2.setReadOnly(True)
         self.lnEdit_gain_slider_2.setObjectName("lnEdit_gain_slider_2")
@@ -467,6 +898,8 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.lnEdit_freq_slider_3.sizePolicy().hasHeightForWidth())
         self.lnEdit_freq_slider_3.setSizePolicy(sizePolicy)
+        self.lnEdit_freq_slider_3.setMinimumSize(QtCore.QSize(50, 0))
+        self.lnEdit_freq_slider_3.setMaximumSize(QtCore.QSize(60, 16777215))
         self.lnEdit_freq_slider_3.setInputMask("")
         self.lnEdit_freq_slider_3.setAlignment(QtCore.Qt.AlignCenter)
         self.lnEdit_freq_slider_3.setReadOnly(True)
@@ -478,6 +911,8 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.lnEdit_gain_slider_3.sizePolicy().hasHeightForWidth())
         self.lnEdit_gain_slider_3.setSizePolicy(sizePolicy)
+        self.lnEdit_gain_slider_3.setMinimumSize(QtCore.QSize(50, 0))
+        self.lnEdit_gain_slider_3.setMaximumSize(QtCore.QSize(60, 16777215))
         self.lnEdit_gain_slider_3.setAlignment(QtCore.Qt.AlignCenter)
         self.lnEdit_gain_slider_3.setReadOnly(True)
         self.lnEdit_gain_slider_3.setObjectName("lnEdit_gain_slider_3")
@@ -519,6 +954,8 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.lnEdit_freq_slider_4.sizePolicy().hasHeightForWidth())
         self.lnEdit_freq_slider_4.setSizePolicy(sizePolicy)
+        self.lnEdit_freq_slider_4.setMinimumSize(QtCore.QSize(50, 0))
+        self.lnEdit_freq_slider_4.setMaximumSize(QtCore.QSize(60, 16777215))
         self.lnEdit_freq_slider_4.setInputMask("")
         self.lnEdit_freq_slider_4.setAlignment(QtCore.Qt.AlignCenter)
         self.lnEdit_freq_slider_4.setReadOnly(True)
@@ -530,6 +967,8 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.lnEdit_gain_slider_4.sizePolicy().hasHeightForWidth())
         self.lnEdit_gain_slider_4.setSizePolicy(sizePolicy)
+        self.lnEdit_gain_slider_4.setMinimumSize(QtCore.QSize(50, 0))
+        self.lnEdit_gain_slider_4.setMaximumSize(QtCore.QSize(60, 16777215))
         self.lnEdit_gain_slider_4.setAlignment(QtCore.Qt.AlignCenter)
         self.lnEdit_gain_slider_4.setReadOnly(True)
         self.lnEdit_gain_slider_4.setObjectName("lnEdit_gain_slider_4")
@@ -571,6 +1010,8 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.lnEdit_freq_slider_5.sizePolicy().hasHeightForWidth())
         self.lnEdit_freq_slider_5.setSizePolicy(sizePolicy)
+        self.lnEdit_freq_slider_5.setMinimumSize(QtCore.QSize(50, 0))
+        self.lnEdit_freq_slider_5.setMaximumSize(QtCore.QSize(60, 16777215))
         self.lnEdit_freq_slider_5.setInputMask("")
         self.lnEdit_freq_slider_5.setAlignment(QtCore.Qt.AlignCenter)
         self.lnEdit_freq_slider_5.setReadOnly(True)
@@ -582,6 +1023,8 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.lnEdit_gain_slider_5.sizePolicy().hasHeightForWidth())
         self.lnEdit_gain_slider_5.setSizePolicy(sizePolicy)
+        self.lnEdit_gain_slider_5.setMinimumSize(QtCore.QSize(50, 0))
+        self.lnEdit_gain_slider_5.setMaximumSize(QtCore.QSize(60, 16777215))
         self.lnEdit_gain_slider_5.setAlignment(QtCore.Qt.AlignCenter)
         self.lnEdit_gain_slider_5.setReadOnly(True)
         self.lnEdit_gain_slider_5.setObjectName("lnEdit_gain_slider_5")
@@ -623,6 +1066,8 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.lnEdit_freq_slider_6.sizePolicy().hasHeightForWidth())
         self.lnEdit_freq_slider_6.setSizePolicy(sizePolicy)
+        self.lnEdit_freq_slider_6.setMinimumSize(QtCore.QSize(50, 0))
+        self.lnEdit_freq_slider_6.setMaximumSize(QtCore.QSize(60, 16777215))
         self.lnEdit_freq_slider_6.setInputMask("")
         self.lnEdit_freq_slider_6.setAlignment(QtCore.Qt.AlignCenter)
         self.lnEdit_freq_slider_6.setReadOnly(True)
@@ -634,6 +1079,8 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.lnEdit_gain_slider_6.sizePolicy().hasHeightForWidth())
         self.lnEdit_gain_slider_6.setSizePolicy(sizePolicy)
+        self.lnEdit_gain_slider_6.setMinimumSize(QtCore.QSize(50, 0))
+        self.lnEdit_gain_slider_6.setMaximumSize(QtCore.QSize(60, 16777215))
         self.lnEdit_gain_slider_6.setAlignment(QtCore.Qt.AlignCenter)
         self.lnEdit_gain_slider_6.setReadOnly(True)
         self.lnEdit_gain_slider_6.setObjectName("lnEdit_gain_slider_6")
@@ -675,6 +1122,8 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.lnEdit_freq_slider_7.sizePolicy().hasHeightForWidth())
         self.lnEdit_freq_slider_7.setSizePolicy(sizePolicy)
+        self.lnEdit_freq_slider_7.setMinimumSize(QtCore.QSize(50, 0))
+        self.lnEdit_freq_slider_7.setMaximumSize(QtCore.QSize(60, 16777215))
         self.lnEdit_freq_slider_7.setInputMask("")
         self.lnEdit_freq_slider_7.setAlignment(QtCore.Qt.AlignCenter)
         self.lnEdit_freq_slider_7.setReadOnly(True)
@@ -686,6 +1135,8 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.lnEdit_gain_slider_7.sizePolicy().hasHeightForWidth())
         self.lnEdit_gain_slider_7.setSizePolicy(sizePolicy)
+        self.lnEdit_gain_slider_7.setMinimumSize(QtCore.QSize(50, 0))
+        self.lnEdit_gain_slider_7.setMaximumSize(QtCore.QSize(60, 16777215))
         self.lnEdit_gain_slider_7.setAlignment(QtCore.Qt.AlignCenter)
         self.lnEdit_gain_slider_7.setReadOnly(True)
         self.lnEdit_gain_slider_7.setObjectName("lnEdit_gain_slider_7")
@@ -727,6 +1178,8 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.lnEdit_freq_slider_8.sizePolicy().hasHeightForWidth())
         self.lnEdit_freq_slider_8.setSizePolicy(sizePolicy)
+        self.lnEdit_freq_slider_8.setMinimumSize(QtCore.QSize(50, 0))
+        self.lnEdit_freq_slider_8.setMaximumSize(QtCore.QSize(60, 16777215))
         self.lnEdit_freq_slider_8.setInputMask("")
         self.lnEdit_freq_slider_8.setAlignment(QtCore.Qt.AlignCenter)
         self.lnEdit_freq_slider_8.setReadOnly(True)
@@ -738,6 +1191,8 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.lnEdit_gain_slider_8.sizePolicy().hasHeightForWidth())
         self.lnEdit_gain_slider_8.setSizePolicy(sizePolicy)
+        self.lnEdit_gain_slider_8.setMinimumSize(QtCore.QSize(50, 0))
+        self.lnEdit_gain_slider_8.setMaximumSize(QtCore.QSize(60, 16777215))
         self.lnEdit_gain_slider_8.setAlignment(QtCore.Qt.AlignCenter)
         self.lnEdit_gain_slider_8.setReadOnly(True)
         self.lnEdit_gain_slider_8.setObjectName("lnEdit_gain_slider_8")
@@ -779,6 +1234,8 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.lnEdit_freq_slider_9.sizePolicy().hasHeightForWidth())
         self.lnEdit_freq_slider_9.setSizePolicy(sizePolicy)
+        self.lnEdit_freq_slider_9.setMinimumSize(QtCore.QSize(50, 0))
+        self.lnEdit_freq_slider_9.setMaximumSize(QtCore.QSize(60, 16777215))
         self.lnEdit_freq_slider_9.setInputMask("")
         self.lnEdit_freq_slider_9.setAlignment(QtCore.Qt.AlignCenter)
         self.lnEdit_freq_slider_9.setReadOnly(True)
@@ -790,6 +1247,8 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.lnEdit_gain_slider_9.sizePolicy().hasHeightForWidth())
         self.lnEdit_gain_slider_9.setSizePolicy(sizePolicy)
+        self.lnEdit_gain_slider_9.setMinimumSize(QtCore.QSize(50, 0))
+        self.lnEdit_gain_slider_9.setMaximumSize(QtCore.QSize(60, 16777215))
         self.lnEdit_gain_slider_9.setAlignment(QtCore.Qt.AlignCenter)
         self.lnEdit_gain_slider_9.setReadOnly(True)
         self.lnEdit_gain_slider_9.setObjectName("lnEdit_gain_slider_9")
@@ -831,6 +1290,8 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.lnEdit_freq_slider_10.sizePolicy().hasHeightForWidth())
         self.lnEdit_freq_slider_10.setSizePolicy(sizePolicy)
+        self.lnEdit_freq_slider_10.setMinimumSize(QtCore.QSize(50, 0))
+        self.lnEdit_freq_slider_10.setMaximumSize(QtCore.QSize(60, 16777215))
         self.lnEdit_freq_slider_10.setInputMask("")
         self.lnEdit_freq_slider_10.setAlignment(QtCore.Qt.AlignCenter)
         self.lnEdit_freq_slider_10.setReadOnly(True)
@@ -842,16 +1303,84 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.lnEdit_gain_slider_10.sizePolicy().hasHeightForWidth())
         self.lnEdit_gain_slider_10.setSizePolicy(sizePolicy)
+        self.lnEdit_gain_slider_10.setMinimumSize(QtCore.QSize(50, 0))
+        self.lnEdit_gain_slider_10.setMaximumSize(QtCore.QSize(60, 16777215))
         self.lnEdit_gain_slider_10.setAlignment(QtCore.Qt.AlignCenter)
         self.lnEdit_gain_slider_10.setReadOnly(True)
         self.lnEdit_gain_slider_10.setObjectName("lnEdit_gain_slider_10")
         self.gridLayout_11.addWidget(self.lnEdit_gain_slider_10, 0, 0, 1, 1)
         self.gridLayout_2.addWidget(self.wgt_sld_10, 0, 10, 1, 1)
-        self.gridLayout_20.addWidget(self.wgt_sliders, 0, 0, 1, 1)
-        self.gridLayout_12.addWidget(self.frame, 4, 1, 1, 1)
+        self.gridLayout_12.addWidget(self.wgt_sliders, 4, 1, 1, 1)
+        self.horizontalLayout_8 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_8.setObjectName("horizontalLayout_8")
+        self.grpbx_input = QtWidgets.QGroupBox(self.centralwidget)
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.grpbx_input.setFont(font)
+        self.grpbx_input.setObjectName("grpbx_input")
+        self.gridLayout_14 = QtWidgets.QGridLayout(self.grpbx_input)
+        self.gridLayout_14.setObjectName("gridLayout_14")
+        self.plot_input_sig_spect = PlotWidget(self.grpbx_input)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.plot_input_sig_spect.sizePolicy().hasHeightForWidth())
+        self.plot_input_sig_spect.setSizePolicy(sizePolicy)
+        self.plot_input_sig_spect.setObjectName("plot_input_sig_spect")
+        self.gridLayout_14.addWidget(self.plot_input_sig_spect, 1, 1, 1, 1)
+        self.plot_input_sig_freq = PlotWidget(self.grpbx_input)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.plot_input_sig_freq.sizePolicy().hasHeightForWidth())
+        self.plot_input_sig_freq.setSizePolicy(sizePolicy)
+        self.plot_input_sig_freq.setObjectName("plot_input_sig_freq")
+        self.gridLayout_14.addWidget(self.plot_input_sig_freq, 1, 0, 1, 1)
+        self.plot_input_sig_time = PlotWidget(self.grpbx_input)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.plot_input_sig_time.sizePolicy().hasHeightForWidth())
+        self.plot_input_sig_time.setSizePolicy(sizePolicy)
+        self.plot_input_sig_time.setObjectName("plot_input_sig_time")
+        self.gridLayout_14.addWidget(self.plot_input_sig_time, 0, 0, 1, 2)
+        self.horizontalLayout_8.addWidget(self.grpbx_input)
+        self.grpbx_output = QtWidgets.QGroupBox(self.centralwidget)
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.grpbx_output.setFont(font)
+        self.grpbx_output.setObjectName("grpbx_output")
+        self.gridLayout_15 = QtWidgets.QGridLayout(self.grpbx_output)
+        self.gridLayout_15.setObjectName("gridLayout_15")
+        self.plot_output_sig_freq = PlotWidget(self.grpbx_output)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.plot_output_sig_freq.sizePolicy().hasHeightForWidth())
+        self.plot_output_sig_freq.setSizePolicy(sizePolicy)
+        self.plot_output_sig_freq.setObjectName("plot_output_sig_freq")
+        self.gridLayout_15.addWidget(self.plot_output_sig_freq, 1, 0, 1, 1)
+        self.plot_output_sig_spect = PlotWidget(self.grpbx_output)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.plot_output_sig_spect.sizePolicy().hasHeightForWidth())
+        self.plot_output_sig_spect.setSizePolicy(sizePolicy)
+        self.plot_output_sig_spect.setObjectName("plot_output_sig_spect")
+        self.gridLayout_15.addWidget(self.plot_output_sig_spect, 1, 1, 1, 1)
+        self.plot_output_sig_time = PlotWidget(self.grpbx_output)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.plot_output_sig_time.sizePolicy().hasHeightForWidth())
+        self.plot_output_sig_time.setSizePolicy(sizePolicy)
+        self.plot_output_sig_time.setObjectName("plot_output_sig_time")
+        self.gridLayout_15.addWidget(self.plot_output_sig_time, 0, 0, 1, 2)
+        self.horizontalLayout_8.addWidget(self.grpbx_output)
+        self.gridLayout_12.addLayout(self.horizontalLayout_8, 1, 0, 1, 2)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1320, 26))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1414, 25))
         self.menubar.setObjectName("menubar")
         self.menuFile = QtWidgets.QMenu(self.menubar)
         self.menuFile.setObjectName("menuFile")
@@ -881,17 +1410,15 @@ class Ui_MainWindow(object):
         self.cmbx_mode_selection.setItemText(1, _translate("MainWindow", "Musical Instruments Mode"))
         self.cmbx_mode_selection.setItemText(2, _translate("MainWindow", "Animal Sounds Mode"))
         self.cmbx_mode_selection.setItemText(3, _translate("MainWindow", "ECG Abnormalities Mode"))
-        self.grpbx_input.setTitle(_translate("MainWindow", "Input Signal"))
-        self.grpbx_output.setTitle(_translate("MainWindow", "Output Signal"))
         self.chkbx_spect_input.setText(_translate("MainWindow", "Spectrogram"))
         self.chkbx_spect_output.setText(_translate("MainWindow", "Spectrogram"))
         self.grpbx_multWindow.setTitle(_translate("MainWindow", "Multiplication Window"))
+        self.lbl_amplitude_3.setText(_translate("MainWindow", "Standard Deviation"))
+        self.lbl_value_amp_3.setText(_translate("MainWindow", "0"))
         self.cmbx_multWindow.setItemText(0, _translate("MainWindow", "Rectangle"))
         self.cmbx_multWindow.setItemText(1, _translate("MainWindow", "Hamming"))
         self.cmbx_multWindow.setItemText(2, _translate("MainWindow", "Hanning"))
         self.cmbx_multWindow.setItemText(3, _translate("MainWindow", "Gaussian"))
-        self.lbl_amplitude_3.setText(_translate("MainWindow", "Standard Deviation"))
-        self.lbl_value_amp_3.setText(_translate("MainWindow", "0"))
         self.lbl_gain.setText(_translate("MainWindow", "Gain"))
         self.lbl_gain_max.setText(_translate("MainWindow", "+30 dB"))
         self.lbl_gain_zero.setText(_translate("MainWindow", "0 dB"))
@@ -927,6 +1454,8 @@ class Ui_MainWindow(object):
         self.label_slider10.setText(_translate("MainWindow", "Slider 10"))
         self.lnEdit_freq_slider_10.setText(_translate("MainWindow", "0"))
         self.lnEdit_gain_slider_10.setText(_translate("MainWindow", "0"))
+        self.grpbx_input.setTitle(_translate("MainWindow", "Input Signal"))
+        self.grpbx_output.setTitle(_translate("MainWindow", "Output Signal"))
         self.menuFile.setTitle(_translate("MainWindow", "File"))
         self.actionOpen.setText(_translate("MainWindow", "Open"))
         self.actionOpen.setShortcut(_translate("MainWindow", "Ctrl+O"))
