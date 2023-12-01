@@ -394,16 +394,15 @@ class Equalizer(QMainWindow):
             media_content = QMediaContent(QUrl.fromLocalFile(path))
             media.setMedia(media_content)
 
-            # if media.state() == QMediaPlayer.State.PlayingState:
-            if self.media_player_status == 1:
-                self.current_position = media.position()
+            if media.state() == QMediaPlayer.State.PlayingState:
+                # self.current_position = media.position()
                 media.pause()
-                self.media_player_status = 0
+                # self.media_player_status = 0
             else: 
-                media.setPosition(self.current_position)             
+                # media.setPosition(self.current_position)             
                 media.play()
-                media.setPosition(self.current_position)
-                self.media_player_status = 1
+                # media.setPosition(self.current_position)
+                # self.media_player_status = 1
 
             
 

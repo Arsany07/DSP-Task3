@@ -94,15 +94,17 @@ class Equalizer(QMainWindow):
         self.media_player_input = QMediaPlayer()
         
         # Vertical line to act as seeker on plot
-        
+        # medPlayer_seeker_input = pg.InfiniteLine(pos = self.media_player_input.position(), angle = 90, pen = pg.mkPen('y'), movable =  True)
         self.medPlayer_seeker = pg.InfiniteLine(pos = self.media_player_input.position(), angle = 90, pen = pg.mkPen('y'), movable =  True)
+        # self.gui.plot_input_sig_time.addItem(self.medPlayer_seeker)
         self.media_player_input.stateChanged.connect(self.on_media_state_changed)
         self.media_player_input.positionChanged.connect(lambda position: self.medPlayer_seeker.setValue(position))
         
         # Output #
         self.media_player_output = QMediaPlayer()
         # Vertical line to act as seeker on plot
-        
+        # medPlayer_seeker_output = pg.InfiniteLine(pos = self.media_player_input.position(), angle = 90, pen = pg.mkPen('y'), movable =  True)
+        # self.gui.plot_output_sig_time.addItem(self.medPlayer_seeker)
         self.media_player_output.stateChanged.connect(self.on_media_state_changed_output)
         self.media_player_output.positionChanged.connect(lambda position: self.medPlayer_seeker.setValue(position))
         
@@ -113,7 +115,7 @@ class Equalizer(QMainWindow):
         
         
         # Connect the button click event to the play_file method
-        self.gui.btn_play_input.clicked.connect(lambda: self.play_file(self.media_player_input, path = self.path))
+        self.gui.btn_play_input.clicked.connect(lambda: self.play_file(self.media_player_input, path=self.path))
         self.gui.btn_rewind_input.clicked.connect(lambda: self.restart_file(self.media_player_input, path=self.path))
         self.gui.btn_pan_left_input.clicked.connect(lambda: self.seek_backward(self.media_player_input))
         self.gui.btn_pan_right_input.clicked.connect(lambda: self.seek_forward(self.media_player_input))
@@ -154,7 +156,7 @@ class Equalizer(QMainWindow):
         self.hide_input_spectrogram()
         self.hide_output_spectrogram()
         self.link_views()
-        # self.apply_optimizations_to_views()
+        self.apply_optimizations_to_views()
         self.gui.wgt_multWindow_amp.setVisible(False)
 
     #=============================== Function Definitions ===============================#
@@ -382,19 +384,13 @@ class Equalizer(QMainWindow):
             media_content = QMediaContent(QUrl.fromLocalFile(path))
             media.setMedia(media_content)
             media.play()
-    
-    # # Sets the media file to be played by the player
-    # def load_media_file(self,media: QMediaPlayer, path):
-    #         media_content = QMediaContent(QUrl.fromLocalFile(path))
-    #         media.setMedia(media_content)
-        
 
-    def play_file(self, media: QMediaPlayer, path):
+
+    def play_file(self, media, path):
         if self.sample_rate is not None:
             media_content = QMediaContent(QUrl.fromLocalFile(path))
             media.setMedia(media_content)
 
-            # if media.state() == QMediaPlayer.State.PlayingState:
             if self.media_player_status == 1:
                 self.current_position = media.position()
                 media.pause()
@@ -453,18 +449,14 @@ class Equalizer(QMainWindow):
             self.path = files_name[0]
             if self.path:
                 signal, sample_rate = librosa.load(self.path)
-                
-                # TODO - Re-add the new loading method
-                # # Load media file into media player for input
-                # self.load_media_file(self.media_player_input, self.path)
+
 
                 # sample_rate, signal = wavfile.read(self.path)
                 self.data = signal
                 self.sample_rate = sample_rate
                 
                 # print (signal.shape)
-                self.data_fft = np.fft.fft(signal, axis= 0)
-                self.data_fft = np.abs(self.data_fft)
+                self.data_fft = np.fft.fft(signal,)
                 self.frequencies = np.fft.fftfreq(len(signal), 1 / sample_rate)
 
                 # self.time = np.arange(0, self.data.size//8, 0.125)
@@ -485,10 +477,9 @@ class Equalizer(QMainWindow):
 
 
 
-                self.plot_on_main(self.data_fft, self.frequencies)
-                self.plot_on_secondary(self.data_modified_fft, self.data_modified_frequencies)
-                # self.plot_loaded_signal()
-                # self.plot_on_main()
+                # self.plot_on_main(self.data_fft, self.frequencies)
+                # self.plot_on_secondary(self.data_modified_fft, self.data_modified_frequencies)
+                self.plot_loaded_signal()
 
                 self.plot_spectrogram_main()
                 self.plot_spectrogram_secondary()
@@ -526,31 +517,32 @@ class Equalizer(QMainWindow):
 
 
     
-    # def plot_loaded_signal(self):
-    #     self.plot_on_main()
-    #     # self.plot_on_secondary()
-    #     # self.gui.plot_input_sig_time.addItem(self.medPlayer_seeker)
-    #     # self.gui.plot_output_sig_time.addItem(self.medPlayer_seeker)
+    def plot_loaded_signal(self):
+        self.plot_on_main()
+        self.plot_on_secondary()
+        self.gui.plot_input_sig_time.addItem(self.medPlayer_seeker)
+        self.gui.plot_output_sig_time.addItem(self.medPlayer_seeker)
 
 
 
-    def plot_on_main(self, data, freq):
+    # def plot_on_main(self, data, freq):
+    def plot_on_main(self):
         self.gui.plot_input_sig_time.clear()
         self.gui.plot_input_sig_freq.clear()
 
-        self.gui.plot_input_sig_time.plot(self.data, pen="r")
         # self.gui.plot_input_sig_time.plot(self.data, pen="r")
-        self.gui.plot_input_sig_freq.plot(self.time, np.abs(data), pen="r")
-        # frequencies = np.linspace(0, self.sample_rate, len(self.data_fft))
-        # self.gui.plot_input_sig_freq.plot(x = frequencies, y= self.data_fft , pen="r")
+        self.gui.plot_input_sig_time.plot(self.data, pen="r")
+        # self.gui.plot_input_sig_freq.plot(self.time, np.abs(data), pen="r")
+        self.gui.plot_input_sig_freq.plot(self.frequencies, self.data_fft , pen="r")
 
-    def plot_on_secondary(self, data, freq):
+    # def plot_on_secondary(self, data, freq):
+    def plot_on_secondary(self):
         self.gui.plot_output_sig_time.clear()
         self.gui.plot_output_sig_freq.clear()
 
         self.gui.plot_output_sig_time.plot(self.data_modified, pen="r")
-        self.gui.plot_output_sig_freq.plot(self.time, np.abs(data), pen="r")
-        # self.gui.plot_output_sig_freq.plot(self.data_modified_frequencies, np.abs(self.data_modified_fft), pen="r")
+        # self.gui.plot_output_sig_freq.plot(self.time, np.abs(data), pen="r")
+        self.gui.plot_output_sig_freq.plot(self.data_modified_frequencies, np.abs(self.data_modified_fft), pen="r")
 
         
     def connect_sliders(self):

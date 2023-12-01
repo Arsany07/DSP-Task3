@@ -94,15 +94,17 @@ class Equalizer(QMainWindow):
         self.media_player_input = QMediaPlayer()
         
         # Vertical line to act as seeker on plot
-        
+        # medPlayer_seeker_input = pg.InfiniteLine(pos = self.media_player_input.position(), angle = 90, pen = pg.mkPen('y'), movable =  True)
         self.medPlayer_seeker = pg.InfiniteLine(pos = self.media_player_input.position(), angle = 90, pen = pg.mkPen('y'), movable =  True)
+        # self.gui.plot_input_sig_time.addItem(self.medPlayer_seeker)
         self.media_player_input.stateChanged.connect(self.on_media_state_changed)
         self.media_player_input.positionChanged.connect(lambda position: self.medPlayer_seeker.setValue(position))
         
         # Output #
         self.media_player_output = QMediaPlayer()
         # Vertical line to act as seeker on plot
-        
+        # medPlayer_seeker_output = pg.InfiniteLine(pos = self.media_player_input.position(), angle = 90, pen = pg.mkPen('y'), movable =  True)
+        # self.gui.plot_output_sig_time.addItem(self.medPlayer_seeker)
         self.media_player_output.stateChanged.connect(self.on_media_state_changed_output)
         self.media_player_output.positionChanged.connect(lambda position: self.medPlayer_seeker.setValue(position))
         
@@ -113,7 +115,7 @@ class Equalizer(QMainWindow):
         
         
         # Connect the button click event to the play_file method
-        self.gui.btn_play_input.clicked.connect(lambda: self.play_file(self.media_player_input, path = self.path))
+        self.gui.btn_play_input.clicked.connect(lambda: self.play_file(self.media_player_input))
         self.gui.btn_rewind_input.clicked.connect(lambda: self.restart_file(self.media_player_input, path=self.path))
         self.gui.btn_pan_left_input.clicked.connect(lambda: self.seek_backward(self.media_player_input))
         self.gui.btn_pan_right_input.clicked.connect(lambda: self.seek_forward(self.media_player_input))
@@ -383,27 +385,24 @@ class Equalizer(QMainWindow):
             media.setMedia(media_content)
             media.play()
     
-    # # Sets the media file to be played by the player
-    # def load_media_file(self,media: QMediaPlayer, path):
-    #         media_content = QMediaContent(QUrl.fromLocalFile(path))
-    #         media.setMedia(media_content)
-        
-
-    def play_file(self, media: QMediaPlayer, path):
-        if self.sample_rate is not None:
+    # Sets the media file to be played by the player
+    def load_media_file(self,media: QMediaPlayer, path):
             media_content = QMediaContent(QUrl.fromLocalFile(path))
             media.setMedia(media_content)
+        
 
-            # if media.state() == QMediaPlayer.State.PlayingState:
-            if self.media_player_status == 1:
-                self.current_position = media.position()
+    def play_file(self, media: QMediaPlayer):
+        if self.sample_rate is not None:
+
+            if media.state() == QMediaPlayer.State.PlayingState:
+                # self.current_position = media.position()
                 media.pause()
-                self.media_player_status = 0
+                # self.media_player_status = 0
             else: 
-                media.setPosition(self.current_position)             
+                # media.setPosition(self.current_position)             
                 media.play()
-                media.setPosition(self.current_position)
-                self.media_player_status = 1
+                # media.setPosition(self.current_position)
+                # self.media_player_status = 1
 
             
 
