@@ -81,8 +81,8 @@ class Equalizer(QMainWindow):
         
         self.views = [self.gui.plot_input_sig_freq, self.gui.plot_input_sig_time, self.gui.plot_input_sig_spect, self.gui.plot_output_sig_freq,
                       self.gui.plot_output_sig_time, self.gui.plot_output_sig_spect]
-        # for i in range(10):
-        #     self.connect_sliders(i)
+        for i in range(10):
+            self.connect_sliders(i)
 
         # self.connect_sliders()
         self.gui.actionOpen.triggered.connect(self.open_wav_file)
@@ -288,11 +288,19 @@ class Equalizer(QMainWindow):
     
     def clear_graphs(self):
         self.gui.plot_input_sig_time.clear()
+        self.gui.plot_output_sig_time.clear()
+
         self.gui.plot_input_sig_freq.clear()
-        self.gui.plot_output_sig_time.clear()  
         self.gui.plot_output_sig_freq.clear()
+
         self.gui.plot_input_sig_spect.clear()  
         self.gui.plot_output_sig_spect.clear()
+
+        for i in range(10):
+            self.sliders_freqs[i].setText(str(0))
+            self.sliders[i].setValue(0)
+            self.sliders_gains[i].setText(str(0))
+
 
     
     
@@ -463,9 +471,13 @@ class Equalizer(QMainWindow):
                 self.sample_rate = sample_rate
                 
                 # print (signal.shape)
-                self.data_fft = np.fft.fft(signal, axis= 0)
-                self.data_fft = np.abs(self.data_fft)
+                # self.data_fft = np.fft.fft(signal, axis= 0)
+                # self.data_fft = np.abs(self.data_fft)
+                # self.frequencies = np.fft.fftfreq(len(signal), 1 / sample_rate)
+
+                self.data_fft = np.fft.fft(signal)
                 self.frequencies = np.fft.fftfreq(len(signal), 1 / sample_rate)
+
 
                 # self.time = np.arange(0, self.data.size//8, 0.125)
                 self.time = np.arange(0, self.data.size)
@@ -493,7 +505,7 @@ class Equalizer(QMainWindow):
                 self.plot_spectrogram_main()
                 self.plot_spectrogram_secondary()
 
-                self.connect_sliders()
+                self.set_bands_freq_sliders()
 
         except Exception as e:
             print(f"Error: {e}")
@@ -551,42 +563,16 @@ class Equalizer(QMainWindow):
         self.gui.plot_output_sig_time.plot(self.data_modified, pen="r")
         self.gui.plot_output_sig_freq.plot(self.time, np.abs(data), pen="r")
         # self.gui.plot_output_sig_freq.plot(self.data_modified_frequencies, np.abs(self.data_modified_fft), pen="r")
+    
+
+
+    def set_bands_freq_sliders(self):
+        for i in range(10):
+            self.sliders_freqs[i].setText(str((self.data_ranges[i][1])))
 
         
-    def connect_sliders(self):
-        mode = self.gui.cmbx_mode_selection.currentText()
-        match mode:
-            
-            case "Uniform Range Mode":
-                self.change_mode_uniform()
-                self.clear_graphs()
-                for index in range(10):
-                    self.sliders[index].valueChanged.connect(lambda: self.mult_freqs(index))
-                    self.sliders_freqs[index].setText(str((self.data_ranges[index][1])))
-                
-            case "Musical Instruments Mode":
-                self.change_mode_instruments()
-                self.clear_graphs()
-
-                for index in range(4):
-                    # self.sliders[index].valueChanged.connect(lambda: self.mult_freqs(index))
-                    self.sliders_freqs[index].setText(f"{self.instrument_ranges[index][0]} : {self.instrument_ranges[index][1]}")
-                
-            case "Animal Sounds Mode":
-                self.change_mode_animals()
-                self.clear_graphs()
-
-                for index in range(4):
-                    # self.sliders[index].valueChanged.connect(lambda: self.mult_freqs(index))
-                    self.sliders_freqs[index].setText(f"{self.animal_ranges[index][0]} : {self.animal_ranges[index][1]}")
-
-                
-            case "ECG Abnormalities Mode":
-                self.change_mode_ECG()
-                self.clear_graphs()
-                
-            case _:
-                print ("Default Case")
+    def connect_sliders(self, index):
+        self.sliders[index].valueChanged.connect(lambda: self.mult_freqs(index))
 
 
     def mult_freqs(self, index):
