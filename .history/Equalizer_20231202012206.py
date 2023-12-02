@@ -94,17 +94,15 @@ class Equalizer(QMainWindow):
         self.media_player_input = QMediaPlayer()
         
         # Vertical line to act as seeker on plot
-        # medPlayer_seeker_input = pg.InfiniteLine(pos = self.media_player_input.position(), angle = 90, pen = pg.mkPen('y'), movable =  True)
+        
         self.medPlayer_seeker = pg.InfiniteLine(pos = self.media_player_input.position(), angle = 90, pen = pg.mkPen('y'), movable =  True)
-        # self.gui.plot_input_sig_time.addItem(self.medPlayer_seeker)
         self.media_player_input.stateChanged.connect(self.on_media_state_changed)
         self.media_player_input.positionChanged.connect(lambda position: self.medPlayer_seeker.setValue(position))
         
         # Output #
         self.media_player_output = QMediaPlayer()
         # Vertical line to act as seeker on plot
-        # medPlayer_seeker_output = pg.InfiniteLine(pos = self.media_player_input.position(), angle = 90, pen = pg.mkPen('y'), movable =  True)
-        # self.gui.plot_output_sig_time.addItem(self.medPlayer_seeker)
+        
         self.media_player_output.stateChanged.connect(self.on_media_state_changed_output)
         self.media_player_output.positionChanged.connect(lambda position: self.medPlayer_seeker.setValue(position))
         
@@ -115,7 +113,7 @@ class Equalizer(QMainWindow):
         
         
         # Connect the button click event to the play_file method
-        self.gui.btn_play_input.clicked.connect(lambda: self.play_file(self.media_player_input))
+        self.gui.btn_play_input.clicked.connect(lambda: self.play_file(self.media_player_input, path = self.path))
         self.gui.btn_rewind_input.clicked.connect(lambda: self.restart_file(self.media_player_input, path=self.path))
         self.gui.btn_pan_left_input.clicked.connect(lambda: self.seek_backward(self.media_player_input))
         self.gui.btn_pan_right_input.clicked.connect(lambda: self.seek_forward(self.media_player_input))
@@ -178,8 +176,6 @@ class Equalizer(QMainWindow):
             view.getPlotItem().setDownsampling(auto=True, ds = 1, mode = 'subsample')
             view.getPlotItem().setClipToView(True)
 
-
-    #TODO - Does this even count as repitition? How the heck do you make a function for this?
     # Function to change playback speed
     def change_speed(self):
         self.speed_state +=1
@@ -188,39 +184,32 @@ class Equalizer(QMainWindow):
             case 1:
                 self.gui.btn_speed.setText('x1.0')
                 self.media_player_input.setPlaybackRate(1.0)
-                self.media_player_output.setPlaybackRate(1.0)
             case 2:
                 self.gui.btn_speed.setText('x1.25')
                 self.media_player_input.setPlaybackRate(1.25)
-                self.media_player_output.setPlaybackRate(1.25)
             case 3:
                 self.gui.btn_speed.setText('x1.5')
                 self.media_player_input.setPlaybackRate(1.5)
-                self.media_player_output.setPlaybackRate(1.5)
             case 4:
                 self.gui.btn_speed.setText('x1.75')
                 self.media_player_input.setPlaybackRate(1.75)
-                self.media_player_output.setPlaybackRate(1.75)
             case 5:
                 self.gui.btn_speed.setText('x2.0')
                 self.media_player_input.setPlaybackRate(2.0)
-                self.media_player_output.setPlaybackRate(2.0)
             case 6:
                 self.gui.btn_speed.setText('x0.5')
                 self.media_player_input.setPlaybackRate(0.5)
-                self.media_player_output.setPlaybackRate(0.5)
            
             case 7: # Case 7 to loop back to case 1
                 self.gui.btn_speed.setText('x1.0')
                 self.media_player_input.setPlaybackRate(1.0)
-                self.media_player_output.setPlaybackRate(1.0)
+                self.playback_speed = 1.0
                 self.speed_state = 1
             
             case _: # Default Case
                 self.speed_state = 1
                 self.gui.btn_speed.setText('x1.0')
-                self.media_player_input.setPlaybackRate(1.0)
-                self.media_player_output.setPlaybackRate(1.0)
+                self.playback_speed = 1.0
                 
                 
     def update_player_position(self):
@@ -232,36 +221,45 @@ class Equalizer(QMainWindow):
         
     #TODO - CHANGE INTO ONE FUNCTION TO AVOID REPITITION
 
-    # Function to show specified sliders and change their labels
-    def modifiy_sliders(self, start_index, end_index, new_slider_name):
-        
-        # for slider in self.slider_wgts[start_index:end_index]:
-        #     slider.setVisible(True)
-        for i, widget in enumerate(self.slider_wgts):
-            
-            # Only show slider widgets that are in given range
-            if i in range(start_index, end_index):
-                widget.setVisible(True)
-            else:
-                widget.setVisible(False)
-            
-            # Set slider label text
-            widget.findChild(QtWidgets.QLabel).setText(f"{new_slider_name} {i+1}")
-            
-    
     # "Mode Changing" methods
     def change_mode_uniform(self):
-        self.modifiy_sliders(0, 10, 'Slider')            
         
+        for slider in self.slider_wgts[:10]:
+            slider.setVisible(True)
+        for i, widget in enumerate(self.slider_wgts):
+            widget.findChild(QtWidgets.QLabel).setText(f"Slider {i+1}")
+            
     def change_mode_instruments(self):
-        self.modifiy_sliders(0, 4, 'Instrument')
+        
+        for slider in self.slider_wgts[4:10]:
+            slider.setVisible(False)
+        for i, widget in enumerate(self.slider_wgts):
+            widget.findChild(QtWidgets.QLabel).setText(f"Instrument {i+1}")
+        # for i, label in enumerate(self.gui.slider_wgts.findChildren(QtWidgets.QLabel)):
+        #     label.setText(f"Instrument {i}")
+
+                
         
     def change_mode_animals(self):
-        self.modifiy_sliders(0, 4, 'Animal')
+
+        for slider in self.slider_wgts[4:10]:
+            slider.setVisible(False)
+            
+        for i, widget in enumerate(self.slider_wgts):
+            widget.findChild(QtWidgets.QLabel).setText(f"Animal {i+1}")
+        
+        # for slider in self.sliders[4:9]:
+        #     slider.setVisible(False)
+        # for i, label in enumerate(self.gui.wgt_sliders.findChildren(QtWidgets.QLabel)):
+        #     label.setText(f"animal {i}")
     
     def change_mode_ECG(self):
-        self.modifiy_sliders(0, 3, 'Arrithmiya')
-
+        for slider in self.slider_wgts[3:10]:
+            slider.setVisible(False)
+            
+        for i, widget in enumerate(self.slider_wgts):
+            widget.findChild(QtWidgets.QLabel).setText(f"Arrythmia {i+1}")
+        pass
     
     def switch_modes(self):
         mode = self.gui.cmbx_mode_selection.currentText()
@@ -385,24 +383,27 @@ class Equalizer(QMainWindow):
             media.setMedia(media_content)
             media.play()
     
-    # Sets the media file to be played by the player
-    def load_media_file(self,media: QMediaPlayer, path):
-            media_content = QMediaContent(QUrl.fromLocalFile(path))
-            media.setMedia(media_content)
+    # # Sets the media file to be played by the player
+    # def load_media_file(self,media: QMediaPlayer, path):
+    #         media_content = QMediaContent(QUrl.fromLocalFile(path))
+    #         media.setMedia(media_content)
         
 
-    def play_file(self, media: QMediaPlayer):
+    def play_file(self, media: QMediaPlayer, path):
         if self.sample_rate is not None:
+            media_content = QMediaContent(QUrl.fromLocalFile(path))
+            media.setMedia(media_content)
 
-            if media.state() == QMediaPlayer.State.PlayingState:
-                # self.current_position = media.position()
+            # if media.state() == QMediaPlayer.State.PlayingState:
+            if self.media_player_status == 1:
+                self.current_position = media.position()
                 media.pause()
-                # self.media_player_status = 0
+                self.media_player_status = 0
             else: 
-                # media.setPosition(self.current_position)             
+                media.setPosition(self.current_position)             
                 media.play()
-                # media.setPosition(self.current_position)
-                # self.media_player_status = 1
+                media.setPosition(self.current_position)
+                self.media_player_status = 1
 
             
 
@@ -453,8 +454,9 @@ class Equalizer(QMainWindow):
             if self.path:
                 signal, sample_rate = librosa.load(self.path)
                 
-                # Load media file into media player for input
-                self.load_media_file(self.media_player_input, self.path)
+                # TODO - Re-add the new loading method
+                # # Load media file into media player for input
+                # self.load_media_file(self.media_player_input, self.path)
 
                 # sample_rate, signal = wavfile.read(self.path)
                 self.data = signal
@@ -483,13 +485,13 @@ class Equalizer(QMainWindow):
 
 
 
-                # self.plot_on_main(self.data_fft, self.frequencies)
-                # self.plot_on_secondary(self.data_modified_fft, self.data_modified_frequencies)
+                self.plot_on_main(self.data_fft, self.frequencies)
+                self.plot_on_secondary(self.data_modified_fft, self.data_modified_frequencies)
                 # self.plot_loaded_signal()
-                self.plot_on_main()
+                # self.plot_on_main()
 
-                # self.plot_spectrogram_main()
-                # self.plot_spectrogram_secondary()
+                self.plot_spectrogram_main()
+                self.plot_spectrogram_secondary()
 
                 self.connect_sliders()
 
@@ -524,33 +526,31 @@ class Equalizer(QMainWindow):
 
 
     
-    def plot_loaded_signal(self):
-        self.plot_on_main()
-        # self.plot_on_secondary()
-        # self.gui.plot_input_sig_time.addItem(self.medPlayer_seeker)
-        # self.gui.plot_output_sig_time.addItem(self.medPlayer_seeker)
+    # def plot_loaded_signal(self):
+    #     self.plot_on_main()
+    #     # self.plot_on_secondary()
+    #     # self.gui.plot_input_sig_time.addItem(self.medPlayer_seeker)
+    #     # self.gui.plot_output_sig_time.addItem(self.medPlayer_seeker)
 
 
 
-    # def plot_on_main(self, data, freq):
-    def plot_on_main(self):
+    def plot_on_main(self, data, freq):
         self.gui.plot_input_sig_time.clear()
         self.gui.plot_input_sig_freq.clear()
 
-        # self.gui.plot_input_sig_time.plot(self.data, pen="r")
         self.gui.plot_input_sig_time.plot(self.data, pen="r")
-        # self.gui.plot_input_sig_freq.plot(self.time, np.abs(data), pen="r")
-        frequencies = np.linspace(0, self.sample_rate, len(self.data_fft))
+        # self.gui.plot_input_sig_time.plot(self.data, pen="r")
+        self.gui.plot_input_sig_freq.plot(self.time, np.abs(data), pen="r")
+        # frequencies = np.linspace(0, self.sample_rate, len(self.data_fft))
         # self.gui.plot_input_sig_freq.plot(x = frequencies, y= self.data_fft , pen="r")
 
-    # def plot_on_secondary(self, data, freq):
-    def plot_on_secondary(self):
+    def plot_on_secondary(self, data, freq):
         self.gui.plot_output_sig_time.clear()
         self.gui.plot_output_sig_freq.clear()
 
         self.gui.plot_output_sig_time.plot(self.data_modified, pen="r")
-        # self.gui.plot_output_sig_freq.plot(self.time, np.abs(data), pen="r")
-        self.gui.plot_output_sig_freq.plot(self.data_modified_frequencies, np.abs(self.data_modified_fft), pen="r")
+        self.gui.plot_output_sig_freq.plot(self.time, np.abs(data), pen="r")
+        # self.gui.plot_output_sig_freq.plot(self.data_modified_frequencies, np.abs(self.data_modified_fft), pen="r")
 
         
     def connect_sliders(self):
@@ -598,8 +598,6 @@ class Equalizer(QMainWindow):
             std_gaussian=self.section_width / self.std,
             mult_window=self.mult_window
         )
-        
-        # Set values of gains for given slider
         self.sliders_gains[index].setText(str(self.sliders[index].value()))
 
         self.data_modified = np.fft.irfft(self.data_modified_fft)

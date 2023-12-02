@@ -178,8 +178,6 @@ class Equalizer(QMainWindow):
             view.getPlotItem().setDownsampling(auto=True, ds = 1, mode = 'subsample')
             view.getPlotItem().setClipToView(True)
 
-
-    #TODO - Does this even count as repitition? How the heck do you make a function for this?
     # Function to change playback speed
     def change_speed(self):
         self.speed_state +=1
@@ -232,36 +230,45 @@ class Equalizer(QMainWindow):
         
     #TODO - CHANGE INTO ONE FUNCTION TO AVOID REPITITION
 
-    # Function to show specified sliders and change their labels
-    def modifiy_sliders(self, start_index, end_index, new_slider_name):
-        
-        # for slider in self.slider_wgts[start_index:end_index]:
-        #     slider.setVisible(True)
-        for i, widget in enumerate(self.slider_wgts):
-            
-            # Only show slider widgets that are in given range
-            if i in range(start_index, end_index):
-                widget.setVisible(True)
-            else:
-                widget.setVisible(False)
-            
-            # Set slider label text
-            widget.findChild(QtWidgets.QLabel).setText(f"{new_slider_name} {i+1}")
-            
-    
     # "Mode Changing" methods
     def change_mode_uniform(self):
-        self.modifiy_sliders(0, 10, 'Slider')            
         
+        for slider in self.slider_wgts[:10]:
+            slider.setVisible(True)
+        for i, widget in enumerate(self.slider_wgts):
+            widget.findChild(QtWidgets.QLabel).setText(f"Slider {i+1}")
+            
     def change_mode_instruments(self):
-        self.modifiy_sliders(0, 4, 'Instrument')
+        
+        for slider in self.slider_wgts[4:10]:
+            slider.setVisible(False)
+        for i, widget in enumerate(self.slider_wgts):
+            widget.findChild(QtWidgets.QLabel).setText(f"Instrument {i+1}")
+        # for i, label in enumerate(self.gui.slider_wgts.findChildren(QtWidgets.QLabel)):
+        #     label.setText(f"Instrument {i}")
+
+                
         
     def change_mode_animals(self):
-        self.modifiy_sliders(0, 4, 'Animal')
+
+        for slider in self.slider_wgts[4:10]:
+            slider.setVisible(False)
+            
+        for i, widget in enumerate(self.slider_wgts):
+            widget.findChild(QtWidgets.QLabel).setText(f"Animal {i+1}")
+        
+        # for slider in self.sliders[4:9]:
+        #     slider.setVisible(False)
+        # for i, label in enumerate(self.gui.wgt_sliders.findChildren(QtWidgets.QLabel)):
+        #     label.setText(f"animal {i}")
     
     def change_mode_ECG(self):
-        self.modifiy_sliders(0, 3, 'Arrithmiya')
-
+        for slider in self.slider_wgts[3:10]:
+            slider.setVisible(False)
+            
+        for i, widget in enumerate(self.slider_wgts):
+            widget.findChild(QtWidgets.QLabel).setText(f"Arrythmia {i+1}")
+        pass
     
     def switch_modes(self):
         mode = self.gui.cmbx_mode_selection.currentText()
@@ -598,8 +605,6 @@ class Equalizer(QMainWindow):
             std_gaussian=self.section_width / self.std,
             mult_window=self.mult_window
         )
-        
-        # Set values of gains for given slider
         self.sliders_gains[index].setText(str(self.sliders[index].value()))
 
         self.data_modified = np.fft.irfft(self.data_modified_fft)
