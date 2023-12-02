@@ -95,14 +95,13 @@ class Equalizer(QMainWindow):
         self.media_player_input = QMediaPlayer()
         
         # Vertical line to act as seeker on plot
-        self.medPlayer_seeker = pg.InfiniteLine(pos = 0, angle = 90, pen = pg.mkPen('y'), movable =  True)
         
+        self.medPlayer_seeker = pg.InfiniteLine(pos = 0, angle = 90, pen = pg.mkPen('y'), movable =  True)
         self.media_player_input.stateChanged.connect(self.on_media_state_changed)
         self.media_player_input.positionChanged.connect(lambda position: self.medPlayer_seeker.setValue(position))
         
         # Output #
         self.media_player_output = QMediaPlayer()
-        
         # Vertical line to act as seeker on plot
         
         self.media_player_output.stateChanged.connect(self.on_media_state_changed_output)
@@ -174,13 +173,7 @@ class Equalizer(QMainWindow):
 
     
     
-    def setup_seekers(self):
-        self.medPlayer_seeker_1 = pg.InfiniteLine(pos = 0, angle = 90, pen = pg.mkPen('y'), movable =  True)
-        self.medPlayer_seeker_2 = pg.InfiniteLine(pos = 0, angle = 90, pen = pg.mkPen('y'), movable =  True)
-        seekers = [self.medPlayer_seeker_1, self.medPlayer_seeker_2]
         
-        # for seeker in seekers:
-        #     seeker.sigDragged.connect()
         
     
     def apply_optimizations_to_views(self):
@@ -562,7 +555,6 @@ class Equalizer(QMainWindow):
 
             self.gui.plot_input_sig_time.plot(data, pen="r")
             self.gui.plot_input_sig_freq.plot(freq, np.abs(data_fft), pen="r")
-            self.gui.plot_input_sig_time.addItem(self.medPlayer_seeker)
 
 
     def plot_on_secondary(self, data, data_fft, freq):
@@ -571,7 +563,7 @@ class Equalizer(QMainWindow):
 
         self.gui.plot_output_sig_time.plot(data, pen="r")
         self.gui.plot_output_sig_freq.plot(freq, np.abs(data_fft), pen="r")
-        self.gui.plot_output_sig_time.addItem(self.medPlayer_seeker)
+        self.gui.plot_outtime
     
 
 

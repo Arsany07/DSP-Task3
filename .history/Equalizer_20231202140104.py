@@ -95,21 +95,20 @@ class Equalizer(QMainWindow):
         self.media_player_input = QMediaPlayer()
         
         # Vertical line to act as seeker on plot
-        self.medPlayer_seeker = pg.InfiniteLine(pos = 0, angle = 90, pen = pg.mkPen('y'), movable =  True)
         
+        self.medPlayer_seeker = pg.InfiniteLine(pos = 0, angle = 90, pen = pg.mkPen('y'), movable =  True)
         self.media_player_input.stateChanged.connect(self.on_media_state_changed)
         self.media_player_input.positionChanged.connect(lambda position: self.medPlayer_seeker.setValue(position))
         
         # Output #
         self.media_player_output = QMediaPlayer()
-        
         # Vertical line to act as seeker on plot
         
         self.media_player_output.stateChanged.connect(self.on_media_state_changed_output)
         self.media_player_output.positionChanged.connect(lambda position: self.medPlayer_seeker.setValue(position))
         
         # Allow Scrubbing with seeker
-        self.medPlayer_seeker.sigDragged.connect(self.update_player_position)
+        # self.medPlayer_seeker.sigPositionChangeFinished.connect(self.update_player_position)
         
         self.gui.btn_reset_sliders.clicked.connect(self.reset_sliders)
         
@@ -164,8 +163,8 @@ class Equalizer(QMainWindow):
     
     # Links Views
     def link_views(self):
-        self.gui.plot_input_sig_time.setXLink(self.gui.plot_output_sig_time)
-        self.gui.plot_input_sig_time.setYLink(self.gui.plot_output_sig_time)
+        # self.gui.plot_input_sig_time.setXLink(self.gui.plot_output_sig_time)
+        # self.gui.plot_input_sig_time.setYLink(self.gui.plot_output_sig_time)
         # self.gui.plot_input_sig_spect.setXLink(self.gui.plot_output_sig_spect)
         # self.gui.plot_input_sig_spect.setYLink(self.gui.plot_output_sig_spect)
         # self.gui.plot_input_sig_freq.setXLink(self.gui.plot_output_sig_freq)
@@ -173,22 +172,12 @@ class Equalizer(QMainWindow):
         pass
 
     
-    
-    def setup_seekers(self):
-        self.medPlayer_seeker_1 = pg.InfiniteLine(pos = 0, angle = 90, pen = pg.mkPen('y'), movable =  True)
-        self.medPlayer_seeker_2 = pg.InfiniteLine(pos = 0, angle = 90, pen = pg.mkPen('y'), movable =  True)
-        seekers = [self.medPlayer_seeker_1, self.medPlayer_seeker_2]
-        
-        # for seeker in seekers:
-        #     seeker.sigDragged.connect()
-        
-    
     def apply_optimizations_to_views(self):
         for view in self.views:
             view.getPlotItem().setDownsampling(auto=True, ds = 1, mode = 'subsample')
             view.getPlotItem().setClipToView(True)
 
-# Function to change playback speed
+    # Function to change playback speed
     def change_speed(self):
         self.speed_state +=1
         
@@ -196,39 +185,32 @@ class Equalizer(QMainWindow):
             case 1:
                 self.gui.btn_speed.setText('x1.0')
                 self.media_player_input.setPlaybackRate(1.0)
-                self.media_player_output.setPlaybackRate(1.0)
             case 2:
                 self.gui.btn_speed.setText('x1.25')
                 self.media_player_input.setPlaybackRate(1.25)
-                self.media_player_output.setPlaybackRate(1.25)
             case 3:
                 self.gui.btn_speed.setText('x1.5')
                 self.media_player_input.setPlaybackRate(1.5)
-                self.media_player_output.setPlaybackRate(1.5)
             case 4:
                 self.gui.btn_speed.setText('x1.75')
                 self.media_player_input.setPlaybackRate(1.75)
-                self.media_player_output.setPlaybackRate(1.75)
             case 5:
                 self.gui.btn_speed.setText('x2.0')
                 self.media_player_input.setPlaybackRate(2.0)
-                self.media_player_output.setPlaybackRate(2.0)
             case 6:
                 self.gui.btn_speed.setText('x0.5')
                 self.media_player_input.setPlaybackRate(0.5)
-                self.media_player_output.setPlaybackRate(0.5)
            
             case 7: # Case 7 to loop back to case 1
                 self.gui.btn_speed.setText('x1.0')
                 self.media_player_input.setPlaybackRate(1.0)
-                self.media_player_output.setPlaybackRate(1.0)
+                self.playback_speed = 1.0
                 self.speed_state = 1
             
             case _: # Default Case
                 self.speed_state = 1
                 self.gui.btn_speed.setText('x1.0')
-                self.media_player_input.setPlaybackRate(1.0)
-                self.media_player_output.setPlaybackRate(1.0)
+                self.playback_speed = 1.0
                 
                 
     def update_player_position(self):
@@ -510,7 +492,6 @@ class Equalizer(QMainWindow):
                 self.plot_on_main(self.data, self.data_fft, self.frequencies)
                 self.plot_on_secondary(self.data_modified, self.data_modified_fft, self.data_modified_frequencies)
                 self.gui.plot_input_sig_time.addItem(self.medPlayer_seeker)
-                self.gui.plot_input_sig_time.addItem(self.medPlayer_seeker)
 
                 self.plot_spectrogram_main()
                 self.plot_spectrogram_secondary()
@@ -562,7 +543,6 @@ class Equalizer(QMainWindow):
 
             self.gui.plot_input_sig_time.plot(data, pen="r")
             self.gui.plot_input_sig_freq.plot(freq, np.abs(data_fft), pen="r")
-            self.gui.plot_input_sig_time.addItem(self.medPlayer_seeker)
 
 
     def plot_on_secondary(self, data, data_fft, freq):
@@ -571,7 +551,6 @@ class Equalizer(QMainWindow):
 
         self.gui.plot_output_sig_time.plot(data, pen="r")
         self.gui.plot_output_sig_freq.plot(freq, np.abs(data_fft), pen="r")
-        self.gui.plot_output_sig_time.addItem(self.medPlayer_seeker)
     
 
 
