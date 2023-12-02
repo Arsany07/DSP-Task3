@@ -28,14 +28,15 @@ class Equalizer(QMainWindow):
         self.setFocus()
 
 
+        # Define instrument and animal ranges as lists of two-element lists
         self.instrument_ranges = [
             [1000, 2000], [1000, 2000], [1000, 2000], [1000, 2000]
         ]
-
         self.animal_ranges = [
             [1000, 2000], [1000, 2000], [1000, 2000], [1000, 2000]
         ]
         
+        # Initialize various data-related attributes
         self.data = []
         self.data_fft = None
         self.time = []
@@ -45,22 +46,23 @@ class Equalizer(QMainWindow):
         self.data_modified_frequencies = None
         self.sample_rate = None
         self.data_ranges = []
-        self.mult_window = "rectangle"
         self.section_width = None
-
         self.path = None
 
+        # Set default values for some parameters
+        self.mult_window = "rectangle"
         self.std = 100
-
         self.current_position = 0
         
-        self.speed_state = 1 # Will cycle between 1 and 6 for x1.0, x1.25, x1.5, x1.75, x2.0, x0.5
-        # self.playback_speed = 1.0 # The actual value that'll control speed
         
+        # Set initial speed state and media player status
+        self.speed_state = 1  # Will cycle between 1 and 6 for x1.0, x1.25, x1.5, x1.75, x2.0, x0.5
         self.media_player_status = 0
 
+        # Initialize data_ranges with None values
         self.data_ranges = [None] * 10
 
+        # Set up lists of sliders, gains, and frequencies
         self.sliders = [
             self.gui.slider1, self.gui.slider2, self.gui.slider3, self.gui.slider4, self.gui.slider5,
             self.gui.slider6, self.gui.slider7, self.gui.slider8, self.gui.slider9, self.gui.slider10
@@ -75,18 +77,27 @@ class Equalizer(QMainWindow):
             self.gui.lnEdit_freq_slider_1, self.gui.lnEdit_freq_slider_2, self.gui.lnEdit_freq_slider_3, self.gui.lnEdit_freq_slider_4, self.gui.lnEdit_freq_slider_5,
             self.gui.lnEdit_freq_slider_6, self.gui.lnEdit_freq_slider_7, self.gui.lnEdit_freq_slider_8, self.gui.lnEdit_freq_slider_9, self.gui.lnEdit_freq_slider_10
         ]
+
+        # Set up a list of slider widgets
+        self.slider_wgts = [
+            self.gui.wgt_sld_1, self.gui.wgt_sld_2, self.gui.wgt_sld_3, self.gui.wgt_sld_4, self.gui.wgt_sld_5,
+            self.gui.wgt_sld_6, self.gui.wgt_sld_7, self.gui.wgt_sld_8, self.gui.wgt_sld_9, self.gui.wgt_sld_10
+        ]
         
-        self.slider_wgts = [ self.gui.wgt_sld_1, self.gui.wgt_sld_2, self.gui.wgt_sld_3, self.gui.wgt_sld_4,
-                            self.gui.wgt_sld_5, self.gui.wgt_sld_6, self.gui.wgt_sld_7, self.gui.wgt_sld_8,
-                            self.gui.wgt_sld_9, self.gui.wgt_sld_10]
-        
-        self.views = [self.gui.plot_input_sig_freq, self.gui.plot_input_sig_time, self.gui.plot_input_sig_spect, self.gui.plot_output_sig_freq,
-                      self.gui.plot_output_sig_time, self.gui.plot_output_sig_spect]
+        # Set up a list of view widgets
+        self.views = [
+            self.gui.plot_input_sig_freq, self.gui.plot_input_sig_time, self.gui.plot_input_sig_spect,
+            self.gui.plot_output_sig_freq, self.gui.plot_output_sig_time, self.gui.plot_output_sig_spect
+        ]
+
+        # For loop to connect each slider with its func.
         for i in range(10):
             self.connect_sliders(i)
 
-        # self.connect_sliders()
+        # Connect the "Open" action in the GUI to the method self.open_wav_file
         self.gui.actionOpen.triggered.connect(self.open_wav_file)
+
+        # Connect the "Save" action in the GUI to the method self.save_wav_file
         self.gui.actionSave.triggered.connect(self.save_wav_file)
 
 
@@ -113,17 +124,16 @@ class Equalizer(QMainWindow):
         
         self.gui.btn_reset_sliders.clicked.connect(self.reset_sliders)
         
-        
-        # Connect the button click event to the play_file method
+        # INPUT
+        # Connect the button click event to the play, restart, seek_backward and seek_forward methods
         self.gui.btn_play_input.clicked.connect(lambda: self.play_file(self.media_player_input))
         self.gui.btn_rewind_input.clicked.connect(lambda: self.restart_file(self.media_player_input, path=self.path))
         self.gui.btn_pan_left_input.clicked.connect(lambda: self.seek_backward(self.media_player_input))
         self.gui.btn_pan_right_input.clicked.connect(lambda: self.seek_forward(self.media_player_input))
 
-
         
-        
-        # Connect the button click event to the play_file method
+        # OUTPUT
+        # Connect the button click event to the play, restart, seek_backward and seek_forward methods
         self.gui.btn_play_output.clicked.connect(lambda: self.play_file(self.media_player_output))
         self.gui.btn_rewind_output.clicked.connect(lambda: self.restart_file(self.media_player_output, path="output.wav"))
         self.gui.btn_pan_left_output.clicked.connect(lambda: self.seek_backward(self.media_player_output))
@@ -136,7 +146,7 @@ class Equalizer(QMainWindow):
         # Connect Combo boxes
         self.gui.cmbx_mode_selection.currentIndexChanged.connect(self.switch_modes)
         self.gui.cmbx_multWindow.currentIndexChanged.connect(self.update_window)
-        self.plot_multWindow_rectangle()
+        self.plot_multWindow_rectangle() # Intializing the plot on multiplication window
 
 
         self.gui.slider_amplitude_2.valueChanged.connect(self.set_std)
@@ -183,10 +193,16 @@ class Equalizer(QMainWindow):
         #     seeker.sigDragged.connect()
         
     
+    # Apply optimizations to each view in the list of views
     def apply_optimizations_to_views(self):
         for view in self.views:
-            view.getPlotItem().setDownsampling(auto=True, ds = 1, mode = 'subsample')
+            
+            # Set downsampling to automatic with a downsampling factor of 1 and 'subsample' mode
+            view.getPlotItem().setDownsampling(auto=True, ds=1, mode='subsample')
+
+            # Clip the plot to the view boundaries
             view.getPlotItem().setClipToView(True)
+
 
 # Function to change playback speed
     def change_speed(self):
@@ -231,16 +247,20 @@ class Equalizer(QMainWindow):
                 self.media_player_output.setPlaybackRate(1.0)
                 
                 
+    # Update the positions of both input and output media players to match the value of the seeker bar on the plot                
     def update_player_position(self):
-        
-        # Set media player positions to value of seeker bar on the plot
+    
+        # Set the position of the input media player to the value of the seeker bar
         self.media_player_input.setPosition(int(self.medPlayer_seeker.value()))
+
+        # Set the position of the output media player to the value of the seeker bar
         self.media_player_output.setPosition(int(self.medPlayer_seeker.value()))
         
         
         
           
     #TODO - CHANGE INTO ONE FUNCTION TO AVOID REPITITION
+############################################################## Mode Changing methods ##############################################################
 
     # Function to show specified sliders and change their labels
     def modifiy_sliders(self, start_index, end_index, new_slider_name):
@@ -258,7 +278,6 @@ class Equalizer(QMainWindow):
             # Set slider label text
             widget.findChild(QtWidgets.QLabel).setText(f"{new_slider_name} {i+1}")
     
-    # "Mode Changing" methods
     def change_mode_uniform(self):
         self.modifiy_sliders(0, 10, 'Slider')            
         
@@ -297,6 +316,9 @@ class Equalizer(QMainWindow):
             case _:
                 print ("Default Case")
     
+###################################################################################################################################################
+
+    # Reset the graphs and sliders  
     def clear_graphs(self):
         self.reset_sliders()
         for i in range(10):
@@ -310,8 +332,6 @@ class Equalizer(QMainWindow):
 
         self.gui.plot_input_sig_spect.clear()  
         self.gui.plot_output_sig_spect.clear()
-
-        
 
 
     def reset_sliders(self):
@@ -331,6 +351,9 @@ class Equalizer(QMainWindow):
 
     def hide_output_spectrogram(self):
         self.gui.plot_output_sig_spect.setVisible(self.gui.chkbx_spect_output.isChecked())
+
+
+########################################################### Multiplication window methods ###########################################################
 
     def update_window(self, index):
         # Get the selected item from the combo box
@@ -388,9 +411,11 @@ class Equalizer(QMainWindow):
         self.gui.plot_multWindow.clear()
         self.gui.plot_multWindow.plot(x, y, pen="r")
 
+#####################################################################################################################################################
 
 
-    
+########################################################## Reset, play and seeking methods ##########################################################
+
     def seek_forward(self, media):
         current_position = media.position()
         new_position = current_position + 5000
@@ -421,8 +446,9 @@ class Equalizer(QMainWindow):
             else:            
                 media.play()
 
-            
+#####################################################################################################################################################            
 
+    # Printing input audio state 
     def on_media_state_changed(self, state):
         # Handle media player state changes, e.g., update UI based on playback status
         if state == QMediaPlayer.PlayingState:
@@ -431,7 +457,8 @@ class Equalizer(QMainWindow):
             print("Audio playback stopped")
         elif state == QMediaPlayer.PausedState:
             print("Audio playback paused")
-    
+
+    # Printing output audio state         
     def on_media_state_changed_output(self, state):
         # Handle media player state changes, e.g., update UI based on playback status
         if state == QMediaPlayer.PlayingState:
@@ -441,7 +468,7 @@ class Equalizer(QMainWindow):
         elif state == QMediaPlayer.PausedState:
             print("Output Audio playback paused")
 
-
+    # Save the wav file
     def save_wav_file(self):
         modified_signal = self.data_modified * (32767 / max(self.data_modified))
 
@@ -465,10 +492,7 @@ class Equalizer(QMainWindow):
         print("Output file is saved")
 
 
-
-
-
-
+    # Open the wav file
     def open_wav_file(self):
         try:
             files_name = QFileDialog.getOpenFileName(self, 'Open WAV File', os.getenv('HOME'), "WAV files (*.wav)")
@@ -506,13 +530,19 @@ class Equalizer(QMainWindow):
                     self.data_ranges[i] = [start_idx, end_idx]
 
                     
-                
+                # Plot the original signal                
                 self.plot_on_main(self.data, self.data_fft, self.frequencies)
+                
+                # Plot the modified signal                
                 self.plot_on_secondary(self.data_modified, self.data_modified_fft, self.data_modified_frequencies)
+                
                 self.gui.plot_input_sig_time.addItem(self.medPlayer_seeker)
                 self.gui.plot_input_sig_time.addItem(self.medPlayer_seeker)
 
+                # Plot the original signal spectrogram
                 self.plot_spectrogram_main()
+
+                # Plot the original signal spectrogram
                 self.plot_spectrogram_secondary()
 
                 self.set_bands_freq_sliders()
@@ -520,21 +550,26 @@ class Equalizer(QMainWindow):
         except Exception as e:
             print(f"Error: {e}")
 
-
+    # Plotting spectrograms
     def plot_spectrogram(self, ax, data, sample_rate, title):
-        # Compute Spectrogram
+
+        # Compute Spectrogram using the spectrogram function
         f, t, sxx = spectrogram(data, fs=sample_rate)
 
-        # Plot Spectrogram
+        # Plot Spectrogram using an ImageItem
         img = pg.ImageItem()
-        img.setImage(np.log(sxx + 1))
+        img.setImage(np.log(sxx + 1))  # Apply logarithmic scaling to enhance visualization
         ax.addItem(img)
 
-        # Set labels and colormap
+        # Set labels for the plot axes and specify units
         ax.setLabel('left', 'Frequency', units='Hz')
         ax.setLabel('bottom', 'Time', units='s')
+
+        # Set the color map for the Spectrogram
         colormap = pg.colormap.get('viridis')
         img.setColorMap(colormap)
+
+        # Set the title of the plot
         ax.setTitle(title)
 
 
@@ -555,7 +590,7 @@ class Equalizer(QMainWindow):
     #     # self.gui.plot_output_sig_time.addItem(self.medPlayer_seeker)
 
 
-
+    # Plotting original signal
     def plot_on_main(self, data, data_fft, freq):
             self.gui.plot_input_sig_time.clear()
             self.gui.plot_input_sig_freq.clear()
@@ -564,7 +599,7 @@ class Equalizer(QMainWindow):
             self.gui.plot_input_sig_freq.plot(freq, np.abs(data_fft), pen="r")
             self.gui.plot_input_sig_time.addItem(self.medPlayer_seeker)
 
-
+    # Plotting modified signal
     def plot_on_secondary(self, data, data_fft, freq):
         self.gui.plot_output_sig_time.clear()
         self.gui.plot_output_sig_freq.clear()
@@ -574,17 +609,18 @@ class Equalizer(QMainWindow):
         self.gui.plot_output_sig_time.addItem(self.medPlayer_seeker)
     
 
-
+    # Setting the freq. sliders bands
     def set_bands_freq_sliders(self):
         for i in range(10):
             self.sliders_freqs[i].setText(str((self.data_ranges[i][1])))
 
-        
+   # Connect the valueChanged signal of a specific slider (at the given index) to the mult_freqs method 
     def connect_sliders(self, index):
         self.sliders[index].sliderReleased.connect(lambda: self.mult_freqs(index))
 
 
     def mult_freqs(self, index):
+        # Multiply frequencies within the specified range in the FFT data by a scaling factor
         self.data_modified_fft = self.multiply_fft(
             self.data_modified_fft,
             self.data_ranges[index][0],
@@ -593,33 +629,41 @@ class Equalizer(QMainWindow):
             std_gaussian=self.section_width / self.std,
             mult_window=self.mult_window
         )
-        self.sliders_gains[index].setText(str(self.sliders[index].value()))
 
+        # Update the gain label with the current slider value
+        self.sliders_gains[index].setText(str(self.sliders[index].value()))
+        # Inverse FFT to obtain the modified time-domain signal
         self.data_modified = np.fft.irfft(self.data_modified_fft)
-        
+        # Update the modified FFT on the secondary plot
         self.plot_on_secondary(self.data_modified, self.data_modified_fft, self.data_modified_frequencies)
+        # Update the spectrogram on the secondary plot
         self.plot_spectrogram_secondary()
 
         self.save_wav_file()
 
     def multiply_fft(self, data, start, end, index, std_gaussian, mult_window):
+        # Multiply specified frequency range in FFT data by a scaling factor with windowing
+    
+        # Create a copy of the original FFT data
         modified_data = data.copy()
-
+    
+        # Apply windowing and multiplication based on the chosen window type
         if mult_window == "rectangle":
             modified_data[start:end] = self.data_fft[start:end] * index
-
+    
         elif mult_window == "hamming":
             hamming_window = np.hamming(end - start) * index
             modified_data[start:end] = self.data_fft[start:end] * hamming_window
-
+    
         elif mult_window == "hanning":
             hanning_window = np.hanning(end - start) * index
             modified_data[start:end] = self.data_fft[start:end] * hanning_window
-
+    
         elif mult_window == "gaussian":
             gaussian_window = np.exp(-0.5 * ((np.arange(end - start) - (end - start) / 2) / std_gaussian) ** 2) * index
             modified_data[start:end] = self.data_fft[start:end] * gaussian_window
-
+    
+        # Return the modified FFT data
         return modified_data
 
 
