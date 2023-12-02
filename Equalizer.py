@@ -562,7 +562,7 @@ class Equalizer(QMainWindow):
 
         
     def connect_sliders(self, index):
-        self.sliders[index].valueChanged.connect(lambda: self.mult_freqs(index))
+        self.sliders[index].sliderReleased.connect(lambda: self.mult_freqs(index))
 
 
     def mult_freqs(self, index):
@@ -580,6 +580,8 @@ class Equalizer(QMainWindow):
         
         self.plot_on_secondary(self.data_modified, self.data_modified_fft, self.data_modified_frequencies)
         self.plot_spectrogram_secondary()
+
+        self.save_wav_file()
 
     def multiply_fft(self, data, start, end, index, std_gaussian, mult_window):
         modified_data = data.copy()
