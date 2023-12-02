@@ -441,8 +441,7 @@ class Equalizer(QMainWindow):
 
 
     def save_wav_file(self):
-        # Take the inverse Fourier transform to get the modified time-domain signal
-        modified_signal = np.fft.irfft(self.data_modified_fft)
+        modified_signal = self.data_modified * (32767 / max(self.data_modified))
 
         # Convert the data to the appropriate integer type for wavfile.write
         modified_signal = modified_signal.astype(np.int16)
@@ -461,12 +460,17 @@ class Equalizer(QMainWindow):
 
 
 
+
+
     def open_wav_file(self):
         try:
             files_name = QFileDialog.getOpenFileName(self, 'Open WAV File', os.getenv('HOME'), "WAV files (*.wav)")
             self.path = files_name[0]
             if self.path:
+                self.reset_sliders()
+
                 signal, sample_rate = librosa.load(self.path)
+                librosa.fft_frequencies()
                 
                 # TODO - Re-add the new loading method
                 # # Load media file into media player for input
@@ -478,7 +482,10 @@ class Equalizer(QMainWindow):
 
 
                 self.data_fft = np.fft.rfft(signal)
-                self.frequencies = np.fft.rfftfreq(len(signal), 1 / sample_rate)
+                # self.frequencies = np.fft.rfftfreq(len(signal), 1 / sample_rate)
+
+                self.frequencies = librosa.fft_frequencies(sr=sample_rate, n_fft=signal.size)
+
 
 
                 self.data_modified = self.data    
