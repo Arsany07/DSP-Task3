@@ -1,13 +1,12 @@
 import sys
 from PyQt5.QtWidgets import QWidget, QApplication, QMainWindow, QFileDialog
 from gui import Ui_MainWindow
-import io
 import os
 from scipy.io import wavfile
 from scipy.signal import spectrogram
 import numpy as np
 import pyqtgraph as pg
-from PyQt5 import QtWidgets, QtCore
+from PyQt5 import QtWidgets
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 from PyQt5.QtCore import QUrl
 import matplotlib.pyplot as plt
@@ -123,7 +122,7 @@ class Equalizer(QMainWindow):
         
         
         # Connect the button click event to the play_file method
-        self.gui.btn_play_output.clicked.connect(lambda: self.play_file(self.media_player_output))
+        self.gui.btn_play_output.clicked.connect(lambda: self.play_file(self.media_player_output, path="output.wav"))
         self.gui.btn_rewind_output.clicked.connect(lambda: self.restart_file(self.media_player_output, path="output.wav"))
         self.gui.btn_pan_left_output.clicked.connect(lambda: self.seek_backward(self.media_player_output))
         self.gui.btn_pan_right_output.clicked.connect(lambda: self.seek_forward(self.media_player_output))
@@ -428,7 +427,7 @@ class Equalizer(QMainWindow):
         # Take the inverse Fourier transform to get the modified time-domain signal
         modified_signal = np.fft.irfft(self.data_modified_fft)
 
-           # Convert the data to the appropriate integer type for wavfile.write
+        # Convert the data to the appropriate integer type for wavfile.write
         modified_signal = modified_signal.astype(np.int16)
 
         # Print information about the modified signal
@@ -436,13 +435,11 @@ class Equalizer(QMainWindow):
         print("Shape:", modified_signal.shape)
         print("Min value:", np.min(modified_signal))
         print("Max value:", np.max(modified_signal))
-        
-        
 
         # Write the WAV file
         wavfile.write('output.wav', self.sample_rate, modified_signal)
         
-        # # Load temporary output wav file
+        # Load temporary output wav file
         self.load_media_file(self.media_player_output, 'output.wav')
 
         print("Output file is saved")
@@ -464,11 +461,21 @@ class Equalizer(QMainWindow):
                 # sample_rate, signal = wavfile.read(self.path)
                 self.data = signal
                 self.sample_rate = sample_rate
+                
+                # print (signal.shape)
+                # self.data_fft = np.fft.fft(signal, axis= 0)
+                # self.data_fft = np.abs(self.data_fft)
+                # self.frequencies = np.fft.fftfreq(len(signal), 1 / sample_rate)
+
+                self.data_fft = np.fft.fft(signal)
+                self.frequencies = np.fft.fftfreq(len(signal), 1 / sample_rate)
 
 
-                self.data_fft = np.fft.rfft(signal)
-                self.frequencies = np.fft.rfftfreq(len(signal), 1 / sample_rate)
+                # self.time = np.arange(0, self.data.size//8, 0.125)
+                self.time = np.arange(0, self.data.size)
 
+
+                
 
                 self.data_modified = self.data    
                 self.data_modified_fft = self.data_fft
@@ -481,8 +488,11 @@ class Equalizer(QMainWindow):
                     self.data_ranges[i] = [start_idx, end_idx]
 
 
-                self.plot_on_main(self.data, self.data_fft, self.frequencies)
-                self.plot_on_secondary(self.data_modified, self.data_modified_fft, self.data_modified_frequencies)
+
+                self.plot_on_main(self.data_fft, self.frequencies)
+                self.plot_on_secondary(self.data_modified_fft, self.data_modified_frequencies)
+                # self.plot_loaded_signal()
+                # self.plot_on_main()
 
                 self.plot_spectrogram_main()
                 self.plot_spectrogram_secondary()
@@ -528,20 +538,23 @@ class Equalizer(QMainWindow):
 
 
 
-    def plot_on_main(self, data, data_fft, freq):
-            self.gui.plot_input_sig_time.clear()
-            self.gui.plot_input_sig_freq.clear()
+    def plot_on_main(self, data, freq):
+        self.gui.plot_input_sig_time.clear()
+        self.gui.plot_input_sig_freq.clear()
 
-            self.gui.plot_input_sig_time.plot(data, pen="r")
-            self.gui.plot_input_sig_freq.plot(freq, np.abs(data_fft), pen="r")
+        self.gui.plot_input_sig_time.plot(self.data, pen="r")
+        # self.gui.plot_input_sig_time.plot(self.data, pen="r")
+        self.gui.plot_input_sig_freq.plot(self.time, np.abs(data), pen="r")
+        # frequencies = np.linspace(0, self.sample_rate, len(self.data_fft))
+        # self.gui.plot_input_sig_freq.plot(x = frequencies, y= self.data_fft , pen="r")
 
-
-    def plot_on_secondary(self, data, data_fft, freq):
+    def plot_on_secondary(self, data, freq):
         self.gui.plot_output_sig_time.clear()
         self.gui.plot_output_sig_freq.clear()
 
-        self.gui.plot_output_sig_time.plot(data, pen="r")
-        self.gui.plot_output_sig_freq.plot(freq, np.abs(data_fft), pen="r")
+        self.gui.plot_output_sig_time.plot(self.data_modified, pen="r")
+        self.gui.plot_output_sig_freq.plot(self.time, np.abs(data), pen="r")
+        # self.gui.plot_output_sig_freq.plot(self.data_modified_frequencies, np.abs(self.data_modified_fft), pen="r")
     
 
 
@@ -567,7 +580,7 @@ class Equalizer(QMainWindow):
 
         self.data_modified = np.fft.irfft(self.data_modified_fft)
         
-        self.plot_on_secondary(self.data_modified, self.data_modified_fft, self.data_modified_frequencies)
+        self.plot_on_secondary(self.data_modified_fft, self.data_modified_frequencies)
         self.plot_spectrogram_secondary()
 
     def multiply_fft(self, data, start, end, index, std_gaussian, mult_window):

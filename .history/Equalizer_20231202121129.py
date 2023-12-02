@@ -1,13 +1,12 @@
 import sys
 from PyQt5.QtWidgets import QWidget, QApplication, QMainWindow, QFileDialog
 from gui import Ui_MainWindow
-import io
 import os
 from scipy.io import wavfile
 from scipy.signal import spectrogram
 import numpy as np
 import pyqtgraph as pg
-from PyQt5 import QtWidgets, QtCore
+from PyQt5 import QtWidgets
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 from PyQt5.QtCore import QUrl
 import matplotlib.pyplot as plt
@@ -108,13 +107,13 @@ class Equalizer(QMainWindow):
         self.media_player_output.positionChanged.connect(lambda position: self.medPlayer_seeker.setValue(position))
         
         # Allow Scrubbing with seeker
-        # self.medPlayer_seeker.sigPositionChangeFinished.connect(self.update_player_position)
+        self.medPlayer_seeker.sigPositionChangeFinished.connect(self.update_player_position)
         
-        self.gui.btn_reset_sliders.clicked.connect(self.reset_sliders)
+        
         
         
         # Connect the button click event to the play_file method
-        self.gui.btn_play_input.clicked.connect(lambda: self.play_file(self.media_player_input))
+        self.gui.btn_play_input.clicked.connect(lambda: self.play_file(self.media_player_input, path = self.path))
         self.gui.btn_rewind_input.clicked.connect(lambda: self.restart_file(self.media_player_input, path=self.path))
         self.gui.btn_pan_left_input.clicked.connect(lambda: self.seek_backward(self.media_player_input))
         self.gui.btn_pan_right_input.clicked.connect(lambda: self.seek_forward(self.media_player_input))
@@ -123,7 +122,7 @@ class Equalizer(QMainWindow):
         
         
         # Connect the button click event to the play_file method
-        self.gui.btn_play_output.clicked.connect(lambda: self.play_file(self.media_player_output))
+        self.gui.btn_play_output.clicked.connect(lambda: self.play_file(self.media_player_output, path="output.wav"))
         self.gui.btn_rewind_output.clicked.connect(lambda: self.restart_file(self.media_player_output, path="output.wav"))
         self.gui.btn_pan_left_output.clicked.connect(lambda: self.seek_backward(self.media_player_output))
         self.gui.btn_pan_right_output.clicked.connect(lambda: self.seek_forward(self.media_player_output))
@@ -220,39 +219,47 @@ class Equalizer(QMainWindow):
         self.media_player_output.setPosition(int(self.medPlayer_seeker.value()))
         
         
-        
-          
     #TODO - CHANGE INTO ONE FUNCTION TO AVOID REPITITION
 
-    # Function to show specified sliders and change their labels
-    def modifiy_sliders(self, start_index, end_index, new_slider_name):
-        
-        # for slider in self.slider_wgts[start_index:end_index]:
-        #     slider.setVisible(True)
-        for i, widget in enumerate(self.slider_wgts):
-            
-            # Only show slider widgets that are in given range
-            if i in range(start_index, end_index):
-                widget.setVisible(True)
-            else:
-                widget.setVisible(False)
-            
-            # Set slider label text
-            widget.findChild(QtWidgets.QLabel).setText(f"{new_slider_name} {i+1}")
-    
     # "Mode Changing" methods
     def change_mode_uniform(self):
-        self.modifiy_sliders(0, 10, 'Slider')            
         
+        for slider in self.slider_wgts[:10]:
+            slider.setVisible(True)
+        for i, widget in enumerate(self.slider_wgts):
+            widget.findChild(QtWidgets.QLabel).setText(f"Slider {i+1}")
+            
     def change_mode_instruments(self):
-        self.modifiy_sliders(0, 4, 'Instrument')
+        
+        for slider in self.slider_wgts[4:10]:
+            slider.setVisible(False)
+        for i, widget in enumerate(self.slider_wgts):
+            widget.findChild(QtWidgets.QLabel).setText(f"Instrument {i+1}")
+        # for i, label in enumerate(self.gui.slider_wgts.findChildren(QtWidgets.QLabel)):
+        #     label.setText(f"Instrument {i}")
+
+                
         
     def change_mode_animals(self):
-        self.modifiy_sliders(0, 4, 'Animal')
+
+        for slider in self.slider_wgts[4:10]:
+            slider.setVisible(False)
+            
+        for i, widget in enumerate(self.slider_wgts):
+            widget.findChild(QtWidgets.QLabel).setText(f"Animal {i+1}")
+        
+        # for slider in self.sliders[4:9]:
+        #     slider.setVisible(False)
+        # for i, label in enumerate(self.gui.wgt_sliders.findChildren(QtWidgets.QLabel)):
+        #     label.setText(f"animal {i}")
     
     def change_mode_ECG(self):
-        self.modifiy_sliders(0, 3, 'Arrithmiya')
-   
+        for slider in self.slider_wgts[3:10]:
+            slider.setVisible(False)
+            
+        for i, widget in enumerate(self.slider_wgts):
+            widget.findChild(QtWidgets.QLabel).setText(f"Arrythmia {i+1}")
+        pass
     
     def switch_modes(self):
         mode = self.gui.cmbx_mode_selection.currentText()
@@ -280,10 +287,6 @@ class Equalizer(QMainWindow):
                 print ("Default Case")
     
     def clear_graphs(self):
-        self.reset_sliders()
-        for i in range(10):
-            self.sliders_freqs[i].setText(str(0))
-
         self.gui.plot_input_sig_time.clear()
         self.gui.plot_output_sig_time.clear()
 
@@ -293,13 +296,11 @@ class Equalizer(QMainWindow):
         self.gui.plot_input_sig_spect.clear()  
         self.gui.plot_output_sig_spect.clear()
 
-        
-
-
-    def reset_sliders(self):
         for i in range(10):
+            self.sliders_freqs[i].setText(str(0))
             self.sliders[i].setValue(0)
             self.sliders_gains[i].setText(str(0))
+
 
     
     
@@ -390,18 +391,27 @@ class Equalizer(QMainWindow):
             media.setMedia(media_content)
             media.play()
     
-    # Sets the media file to be played by the player
-    def load_media_file(self,media: QMediaPlayer, path):
+    # # Sets the media file to be played by the player
+    # def load_media_file(self,media: QMediaPlayer, path):
+    #         media_content = QMediaContent(QUrl.fromLocalFile(path))
+    #         media.setMedia(media_content)
+        
+
+    def play_file(self, media: QMediaPlayer, path):
+        if self.sample_rate is not None:
             media_content = QMediaContent(QUrl.fromLocalFile(path))
             media.setMedia(media_content)
-        
-    # Governs Playing and pausing
-    def play_file(self, media: QMediaPlayer):
-        if self.sample_rate is not None:
-            if media.state() == QMediaPlayer.State.PlayingState:
+
+            # if media.state() == QMediaPlayer.State.PlayingState:
+            if self.media_player_status == 1:
+                self.current_position = media.position()
                 media.pause()
-            else:            
+                self.media_player_status = 0
+            else: 
+                media.setPosition(self.current_position)             
                 media.play()
+                media.setPosition(self.current_position)
+                self.media_player_status = 1
 
             
 
@@ -428,7 +438,7 @@ class Equalizer(QMainWindow):
         # Take the inverse Fourier transform to get the modified time-domain signal
         modified_signal = np.fft.irfft(self.data_modified_fft)
 
-           # Convert the data to the appropriate integer type for wavfile.write
+        # Convert the data to the appropriate integer type for wavfile.write
         modified_signal = modified_signal.astype(np.int16)
 
         # Print information about the modified signal
@@ -436,14 +446,9 @@ class Equalizer(QMainWindow):
         print("Shape:", modified_signal.shape)
         print("Min value:", np.min(modified_signal))
         print("Max value:", np.max(modified_signal))
-        
-        
 
         # Write the WAV file
         wavfile.write('output.wav', self.sample_rate, modified_signal)
-        
-        # # Load temporary output wav file
-        self.load_media_file(self.media_player_output, 'output.wav')
 
         print("Output file is saved")
 
@@ -458,17 +463,27 @@ class Equalizer(QMainWindow):
                 signal, sample_rate = librosa.load(self.path)
                 
                 # TODO - Re-add the new loading method
-                # Load media file into media player for input
-                self.load_media_file(self.media_player_input, self.path)
+                # # Load media file into media player for input
+                # self.load_media_file(self.media_player_input, self.path)
 
                 # sample_rate, signal = wavfile.read(self.path)
                 self.data = signal
                 self.sample_rate = sample_rate
+                
+                # print (signal.shape)
+                # self.data_fft = np.fft.fft(signal, axis= 0)
+                # self.data_fft = np.abs(self.data_fft)
+                # self.frequencies = np.fft.fftfreq(len(signal), 1 / sample_rate)
+
+                self.data_fft = np.fft.fft(signal)
+                self.frequencies = np.fft.fftfreq(len(signal), 1 / sample_rate)
 
 
-                self.data_fft = np.fft.rfft(signal)
-                self.frequencies = np.fft.rfftfreq(len(signal), 1 / sample_rate)
+                # self.time = np.arange(0, self.data.size//8, 0.125)
+                self.time = np.arange(0, self.data.size)
 
+
+                
 
                 self.data_modified = self.data    
                 self.data_modified_fft = self.data_fft
@@ -481,8 +496,11 @@ class Equalizer(QMainWindow):
                     self.data_ranges[i] = [start_idx, end_idx]
 
 
-                self.plot_on_main(self.data, self.data_fft, self.frequencies)
-                self.plot_on_secondary(self.data_modified, self.data_modified_fft, self.data_modified_frequencies)
+
+                self.plot_on_main(self.data_fft, self.frequencies)
+                self.plot_on_secondary(self.data_modified_fft, self.data_modified_frequencies)
+                # self.plot_loaded_signal()
+                # self.plot_on_main()
 
                 self.plot_spectrogram_main()
                 self.plot_spectrogram_secondary()
@@ -528,20 +546,23 @@ class Equalizer(QMainWindow):
 
 
 
-    def plot_on_main(self, data, data_fft, freq):
-            self.gui.plot_input_sig_time.clear()
-            self.gui.plot_input_sig_freq.clear()
+    def plot_on_main(self, data, freq):
+        self.gui.plot_input_sig_time.clear()
+        self.gui.plot_input_sig_freq.clear()
 
-            self.gui.plot_input_sig_time.plot(data, pen="r")
-            self.gui.plot_input_sig_freq.plot(freq, np.abs(data_fft), pen="r")
+        self.gui.plot_input_sig_time.plot(self.data, pen="r")
+        # self.gui.plot_input_sig_time.plot(self.data, pen="r")
+        self.gui.plot_input_sig_freq.plot(self.time, np.abs(data), pen="r")
+        # frequencies = np.linspace(0, self.sample_rate, len(self.data_fft))
+        # self.gui.plot_input_sig_freq.plot(x = frequencies, y= self.data_fft , pen="r")
 
-
-    def plot_on_secondary(self, data, data_fft, freq):
+    def plot_on_secondary(self, data, freq):
         self.gui.plot_output_sig_time.clear()
         self.gui.plot_output_sig_freq.clear()
 
-        self.gui.plot_output_sig_time.plot(data, pen="r")
-        self.gui.plot_output_sig_freq.plot(freq, np.abs(data_fft), pen="r")
+        self.gui.plot_output_sig_time.plot(self.data_modified, pen="r")
+        self.gui.plot_output_sig_freq.plot(self.time, np.abs(data), pen="r")
+        # self.gui.plot_output_sig_freq.plot(self.data_modified_frequencies, np.abs(self.data_modified_fft), pen="r")
     
 
 
@@ -567,7 +588,7 @@ class Equalizer(QMainWindow):
 
         self.data_modified = np.fft.irfft(self.data_modified_fft)
         
-        self.plot_on_secondary(self.data_modified, self.data_modified_fft, self.data_modified_frequencies)
+        self.plot_on_secondary(self.data_modified_fft, self.data_modified_frequencies)
         self.plot_spectrogram_secondary()
 
     def multiply_fft(self, data, start, end, index, std_gaussian, mult_window):

@@ -437,13 +437,20 @@ class Equalizer(QMainWindow):
         print("Min value:", np.min(modified_signal))
         print("Max value:", np.max(modified_signal))
         
-        
+       
+        fileIO = io.BytesIO()
 
         # Write the WAV file
-        wavfile.write('output.wav', self.sample_rate, modified_signal)
+        # wavfile.write('output.wav', self.sample_rate, modified_signal)
+        wavfile.write(fileIO, self.sample_rate, modified_signal)
+        
+        buffer = QtCore.QBuffer()
+        buffer.setData(fileIO.getvalue())
+        buffer.open(QtCore.QIODevice.ReadOnly)
+        
         
         # # Load temporary output wav file
-        self.load_media_file(self.media_player_output, 'output.wav')
+        # self.load_media_file(self.media_player_output, 'output.wav')
 
         print("Output file is saved")
 
