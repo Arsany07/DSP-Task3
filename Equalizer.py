@@ -109,7 +109,7 @@ class Equalizer(QMainWindow):
         # Allow Scrubbing with seeker
         self.medPlayer_seeker.sigPositionChangeFinished.connect(self.update_player_position)
         
-        
+        self.gui.btn_reset_sliders.clicked.connect(self.reset_sliders)
         
         
         # Connect the button click event to the play_file method
@@ -287,6 +287,10 @@ class Equalizer(QMainWindow):
                 print ("Default Case")
     
     def clear_graphs(self):
+        self.reset_sliders()
+        for i in range(10):
+            self.sliders_freqs[i].setText(str(0))
+
         self.gui.plot_input_sig_time.clear()
         self.gui.plot_output_sig_time.clear()
 
@@ -296,11 +300,13 @@ class Equalizer(QMainWindow):
         self.gui.plot_input_sig_spect.clear()  
         self.gui.plot_output_sig_spect.clear()
 
+        
+
+
+    def reset_sliders(self):
         for i in range(10):
-            self.sliders_freqs[i].setText(str(0))
             self.sliders[i].setValue(0)
             self.sliders_gains[i].setText(str(0))
-
 
     
     
